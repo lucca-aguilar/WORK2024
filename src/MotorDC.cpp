@@ -23,7 +23,7 @@ MotorDC::MotorDC(const int ENCA, const int ENCB, const int PWM, const int IN1, c
   // instance = this;
 }
 
-void MotorDC::congirurar(int ticks_por_volta, float kp, float ki, float kd)
+void MotorDC::configurar(int ticks_por_volta, float kp, float ki, float kd)
 {
   this -> encoder_volta = ticks_por_volta;
   this -> kp = kp;
