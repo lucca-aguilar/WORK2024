@@ -1,12 +1,13 @@
 #include <AccelStepper.h>
+#include <Arduino.h>
 
 // Definição dos pinos para os 4 motores
 #define DIR_MOTOR1 53
 #define STEP_MOTOR1 51
 #define DIR_MOTOR2 50
 #define STEP_MOTOR2 52
-#define DIR_MOTOR3 47
-#define STEP_MOTOR3 49
+#define DIR_MOTOR3 21
+#define STEP_MOTOR3 20
 #define DIR_MOTOR4 45
 #define STEP_MOTOR4 43
 
@@ -32,38 +33,63 @@ void setup() {
 }
 
 void moveForward(int steps) {
-  // Motores 1 e 4 giram em um sentido, 2 e 3 no sentido oposto
+  // Motores 2 e 3 giram 
   motor2.move(steps);
   motor3.move(steps);
 }
 
 void moveBackward(int steps) {
-  // Motores 1 e 4 giram no sentido oposto, 2 e 3 no sentido contrário
+  // Motores 2 e 3 giram no sentido oposto
   motor2.move(-steps);
   motor3.move(-steps);
 }
 
+void moveLeft(int steps) {
+  // Motores 1 e 4 giram 
+  motor1.move(steps);
+  motor4.move(steps);
+}
+
+void moveRight(int steps) {
+  // Motores 1 e 4 giram no sentido oposto
+  motor1.move(-steps);
+  motor4.move(-steps);
+}
+
 void loop() {
 
-  // Mover 10 cm para trás
-  moveBackward(2500);
+  // Mover 10 cm para esquerda
+  moveLeft(250);
 
   while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
     motor1.run();
-    motor2.run();
-    motor3.run();
+    motor4.run();
+  }
+
+  // Mover 10 cm para direita
+  moveRight(250);
+
+  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor1.run();
     motor4.run();
   }
 
   // Mover 10 cm para frente
-  moveForward(2500);
+  moveForward(250);
 
   while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
     motor2.run();
     motor3.run();
-    motor4.run();
   }
+
+  // Mover 10 cm para trás
+  moveBackward(250);
+
+  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor2.run();
+    motor3.run();
+  }
+
 
   delay(1000);  // Pausa de 1 segundo
 }
