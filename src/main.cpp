@@ -1,95 +1,166 @@
 #include <AccelStepper.h>
+#include <UltrasonicSensor.h>
+#include <InfraredSensor.h>
 #include <Arduino.h>
+#include <SoftwareSerial.h>
 
-// Definição dos pinos para os 4 motores
-#define DIR_MOTOR1 53
-#define STEP_MOTOR1 51
-#define DIR_MOTOR2 50
-#define STEP_MOTOR2 52
-#define DIR_MOTOR3 21
-#define STEP_MOTOR3 20
-#define DIR_MOTOR4 45
-#define STEP_MOTOR4 43
+// motores
+AccelStepper motor1(AccelStepper::DRIVER, 53, 53);
+AccelStepper motor2(AccelStepper::DRIVER, 52, 50);
+AccelStepper motor3(AccelStepper::DRIVER, 20, 21);
+AccelStepper motor4(AccelStepper::DRIVER, 43, 45);
 
-// Criar instâncias da biblioteca AccelStepper para cada motor
-AccelStepper motor1(AccelStepper::DRIVER, STEP_MOTOR1, DIR_MOTOR1);
-AccelStepper motor2(AccelStepper::DRIVER, STEP_MOTOR2, DIR_MOTOR2);
-AccelStepper motor3(AccelStepper::DRIVER, STEP_MOTOR3, DIR_MOTOR3);
-AccelStepper motor4(AccelStepper::DRIVER, STEP_MOTOR4, DIR_MOTOR4);
+// sensores ultrassônicos
+UltrasonicSensor usSensorFront(31, 33);
+UltrasonicSensor usSensorRight(35, 37);
+UltrasonicSensor usSensorLeft(39, 41);
 
-void setup() {
-  // Definir a velocidade máxima e aceleração para cada motor
-  motor1.setMaxSpeed(100);  // Velocidade máxima em passos/segundo
-  motor1.setAcceleration(100);  // Aceleração em passos/segundo^2
-  
-  motor2.setMaxSpeed(100);
-  motor2.setAcceleration(100);
+// sensores infravermelho
+InfraredSensor irSensorLFL(0, 2);
+InfraredSensor irSensorLFC(0, 19);
+InfraredSensor irSensorLFR(0, 18);
 
-  motor3.setMaxSpeed(100);
-  motor3.setAcceleration(100);
+void runForward() {
+    motor2.move(-10000);
+    motor3.move(-10000);
 
-  motor4.setMaxSpeed(100);
-  motor4.setAcceleration(100);
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor2.run();
+    motor3.run();
+  }
+};
+
+void runBackward() {
+    motor2.move(10000);
+    motor3.move(10000);
+
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor2.run();
+    motor3.run();
+  }
 }
 
 void moveForward(int steps) {
-  // Motores 2 e 3 giram 
-  motor2.move(steps);
-  motor3.move(steps);
-}
+    motor2.move(-steps);
+    motor3.move(-steps);
+
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor2.run();
+    motor3.run();
+  }
+};
 
 void moveBackward(int steps) {
-  // Motores 2 e 3 giram no sentido oposto
-  motor2.move(-steps);
-  motor3.move(-steps);
-}
+    motor2.move(steps);
+    motor3.move(steps);
+
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+        motor2.run();
+        motor3.run();
+    }
+};
 
 void moveLeft(int steps) {
-  // Motores 1 e 4 giram 
-  motor1.move(steps);
-  motor4.move(steps);
-}
+    motor1.move(steps);
+    motor4.move(steps);
+
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+        motor1.run();
+        motor4.run();
+    }
+};
 
 void moveRight(int steps) {
-  // Motores 1 e 4 giram no sentido oposto
-  motor1.move(-steps);
+    motor1.move(-steps);
+    motor4.move(-steps);
+
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+        motor1.run();
+        motor4.run();
+    }
+};
+
+void rotateClockwise(int steps) {
+  motor1.move(steps);
+  motor2.move(steps);
+  motor3.move(-steps);
   motor4.move(-steps);
+
+  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor1.run();
+    motor2.run();
+    motor3.run();
+    motor4.run();
+  }
+};
+
+void rotateAntiClockwise(int steps) {
+  motor1.move(-steps);
+  motor2.move(-steps);
+  motor3.move(steps);
+  motor4.move(steps);
+
+  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+    motor1.run();
+    motor2.run();
+    motor3.run();
+    motor4.run();
+  }
+};
+
+void setup() {
+    Serial.begin(9600);
+
+    motor1.setMaxSpeed(100);  // Velocidade máxima em passos/segundo
+    motor1.setAcceleration(200);  // Aceleração em passos/segundo^2
+    
+    motor2.setMaxSpeed(100);
+    motor2.setAcceleration(200);
+
+    motor3.setMaxSpeed(115);
+    motor3.setAcceleration(200);
+
+    motor4.setMaxSpeed(100);
+    motor4.setAcceleration(200);
 }
 
 void loop() {
-
-  // Mover 10 cm para esquerda
-  moveLeft(250);
-
-  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
-    motor4.run();
+  /*
+  while (1) {
+    runForward();
+    int frontDistance = usSensorFront.getDistance();
+    if (frontDistance < 30) {
+      break;
+    }
   }
 
-  // Mover 10 cm para direita
-  moveRight(250);
+  moveLeft(300);
+  moveForward(300);
+  moveRight(300);
+  */
 
-  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
-    motor4.run();
-  }
+  bool boolLeft = irSensorLFL.checkNearby();
+  bool boolCenter = irSensorLFC.checkNearby();
+  bool boolRight = irSensorLFR.checkNearby();
 
-  // Mover 10 cm para frente
-  moveForward(250);
+  Serial.print(boolLeft);
+  Serial.print(" ");
+  Serial.print(boolCenter);
+  Serial.print(" ");
+  Serial.print(boolRight);
+  Serial.println();
 
-  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor2.run();
-    motor3.run();
-  }
+  /*
+  int distanceFront = usSensorFront.getDistance();
+  int distanceLeft = usSensorLeft.getDistance();
+  int distanceRight = usSensorRight.getDistance();
 
-  // Mover 10 cm para trás
-  moveBackward(250);
+  Serial.print(distanceFront);
+  Serial.print(" ");
+  Serial.print(distanceLeft);
+  Serial.print(" ");
+  Serial.print(distanceRight);
+  Serial.println();
+  */
 
-  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor2.run();
-    motor3.run();
-  }
-
-
-  delay(1000);  // Pausa de 1 segundo
 }

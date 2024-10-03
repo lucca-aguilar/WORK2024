@@ -1,14 +1,15 @@
 #ifndef ULTRASONIC_SENSOR_H
 #define ULTRASONIC_SENSOR_H
+#include <Arduino.h>
 
-class UltrasonicSensor {
-public:
-    UltrasonicSensor(int triggerPin, int echoPin);
-    long measureDistance();
-    
+class UltrasonicSensor{
 private:
-    int _triggerPin;
-    int _echoPin;
+    int trigPin;
+    int echoPin;
+public:
+    UltrasonicSensor(int trig, int echo);
+    long getDistance();
 };
 
+            
 #endif
