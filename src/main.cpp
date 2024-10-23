@@ -24,7 +24,7 @@ InfraredSensor irSensorLFR(8, 0);  //lineFollowerRight
 
 InfraredSensor irSensorTableHeight1(13, 0); //Top sensor
 InfraredSensor irSensorTableHeight2(10 ,0);
-InfraredSensor irSensorTableHeight3(9 ,0);
+InfraredSensor irSensorTableHeight3(9 ,0); //quicktest
 InfraredSensor irSensorTableHeight4(11, 0); //Bottom sensor
 
 
