@@ -7,10 +7,10 @@
 #include <SoftwareSerial.h>
 
 // motores de passo
-AccelStepper motor1(AccelStepper::DRIVER, 51, 53);
-AccelStepper motor2(AccelStepper::DRIVER, 52, 50);
-AccelStepper motor3(AccelStepper::DRIVER, 20, 21);
-AccelStepper motor4(AccelStepper::DRIVER, 43, 45);
+AccelStepper motor1(AccelStepper::DRIVER, 50, 52);
+AccelStepper motor2(AccelStepper::DRIVER, 53, 51);
+AccelStepper motor3(AccelStepper::DRIVER, 49, 47);
+AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
 // sensores ultrassônicos
 UltrasonicSensor usSensorFront(31, 33);
