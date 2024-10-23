@@ -13,14 +13,19 @@ AccelStepper motor3(AccelStepper::DRIVER, 49, 47);
 AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
 // sensores ultrassônicos
-UltrasonicSensor usSensorFront(31, 33);
-UltrasonicSensor usSensorRight(35, 37);
-UltrasonicSensor usSensorLeft(39, 41);
+UltrasonicSensor usSensorFront(33, 31);
+UltrasonicSensor usSensorRight(22, 24);
+UltrasonicSensor usSensorLeft(37, 35);
 
 // sensores infravermelho
-InfraredSensor irSensorLFL(0, 2);
-InfraredSensor irSensorLFC(0, 18);
-InfraredSensor irSensorLFR(0, 19);
+InfraredSensor irSensorLFL(14, 0);  //lineFollowerLeft
+InfraredSensor irSensorLFC(7, 0);  //lineFollowerCenter
+InfraredSensor irSensorLFR(8, 0);  //lineFollowerRight
+
+InfraredSensor irSensorTableHeight1(13, 0); //Top sensor
+InfraredSensor irSensorTableHeight2(10 ,0);
+InfraredSensor irSensorTableHeight3(9 ,0);
+InfraredSensor irSensorTableHeight4(11, 0); //Bottom sensor
 
 
 // sensor de cor da garra
