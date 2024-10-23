@@ -1,9 +1,9 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef VISION_H
+#define VISION_H
 
-class Camera {
+class Vision {
 public:
-    Camera(int triggerPin, int echoPin);
+    Vision(int rx, int tx);
     void startCamera();
     int readTag();
     bool checkWall();

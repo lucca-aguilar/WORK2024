@@ -1,11 +1,13 @@
 #include <AccelStepper.h>
 #include <UltrasonicSensor.h>
 #include <InfraredSensor.h>
+#include <ColorSensor.h>
+#include <Servo.h>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-// motores
-AccelStepper motor1(AccelStepper::DRIVER, 53, 53);
+// motores de passo
+AccelStepper motor1(AccelStepper::DRIVER, 51, 53);
 AccelStepper motor2(AccelStepper::DRIVER, 52, 50);
 AccelStepper motor3(AccelStepper::DRIVER, 20, 21);
 AccelStepper motor4(AccelStepper::DRIVER, 43, 45);
@@ -17,8 +19,15 @@ UltrasonicSensor usSensorLeft(39, 41);
 
 // sensores infravermelho
 InfraredSensor irSensorLFL(0, 2);
-InfraredSensor irSensorLFC(0, 19);
-InfraredSensor irSensorLFR(0, 18);
+InfraredSensor irSensorLFC(0, 18);
+InfraredSensor irSensorLFR(0, 19);
+
+
+// sensor de cor da garra
+ColorSensor clawSensor(30, 28, 24, 26, 22);
+
+// motor servo da garra
+Servo clawMotor();
 
 void runForward() {
     motor2.move(-10000);
@@ -111,56 +120,71 @@ void rotateAntiClockwise(int steps) {
 void setup() {
     Serial.begin(9600);
 
-    motor1.setMaxSpeed(100);  // Velocidade máxima em passos/segundo
+    motor1.setMaxSpeed(200);  // Velocidade máxima em passos/segundo
     motor1.setAcceleration(200);  // Aceleração em passos/segundo^2
     
-    motor2.setMaxSpeed(100);
+    motor2.setMaxSpeed(200);
     motor2.setAcceleration(200);
 
-    motor3.setMaxSpeed(115);
+    motor3.setMaxSpeed(200);
     motor3.setAcceleration(200);
 
-    motor4.setMaxSpeed(100);
+    motor4.setMaxSpeed(200);
     motor4.setAcceleration(200);
+
 }
 
 void loop() {
-  /*
-  while (1) {
-    runForward();
+  while(true) {
+    
+    
+    
+    int LFL = irSensorLFL.checkNearby();
+    int LFC = irSensorLFC.checkNearby();
+    int LFR = irSensorLFR.checkNearby();
     int frontDistance = usSensorFront.getDistance();
-    if (frontDistance < 30) {
-      break;
+    moveForward(10);
+
+    if (frontDistance < 15) {
+      moveLeft(200);
+      moveForward(370);
+      while (true) {
+        int LFR = irSensorLFR.checkNearby();
+        moveRight(200);
+        break;
+        /*if (LFR == 1) {
+          break;
+        }*/
+      }
     }
+
+    /*
+
+    if (LFL == 0 && LFC == 1 && LFR == 0) {
+      moveForward(15);
+    }
+
+    if (LFL == 1 && LFC == 0 && LFR == 0) {
+      moveForward(5);
+      rotateClockwise(10);
+    }
+
+    if (LFL == 0 && LFC == 0 && LFR == 1) {
+      moveForward(5);
+      rotateAntiClockwise(10);
+    }
+
+    if (LFL == 0 && LFC == 0 && LFR == 0) {
+      moveForward(10);
+    }
+
+    if (LFL == 1 && LFC == 1 && LFR == 1) {
+      moveBackward(490);
+    }
+    */
   }
 
-  moveLeft(300);
-  moveForward(300);
-  moveRight(300);
-  */
+  }
 
-  bool boolLeft = irSensorLFL.checkNearby();
-  bool boolCenter = irSensorLFC.checkNearby();
-  bool boolRight = irSensorLFR.checkNearby();
 
-  Serial.print(boolLeft);
-  Serial.print(" ");
-  Serial.print(boolCenter);
-  Serial.print(" ");
-  Serial.print(boolRight);
-  Serial.println();
 
-  /*
-  int distanceFront = usSensorFront.getDistance();
-  int distanceLeft = usSensorLeft.getDistance();
-  int distanceRight = usSensorRight.getDistance();
-
-  Serial.print(distanceFront);
-  Serial.print(" ");
-  Serial.print(distanceLeft);
-  Serial.print(" ");
-  Serial.print(distanceRight);
-  Serial.println();
-  */
-
-}

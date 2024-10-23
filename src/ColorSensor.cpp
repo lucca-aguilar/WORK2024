@@ -1,8 +1,8 @@
-/*  CPP FILE - ColorSensor library
- *  ColorSensor color sensor library
+/*  CPP FILE - TCS3200 library
+ *  TCS3200 color sensor library
  *  author: Panjkrc
  *  date: 12/14/2019
- *  url: https://github.com/Panjkrc/ColorSensor_library
+ *  url: https://github.com/Panjkrc/TCS3200_library
  */
 
 #include "Arduino.h"
