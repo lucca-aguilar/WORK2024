@@ -9,41 +9,42 @@
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
-#define velocity 100
-#define acceleration 5
+#define dc_velocity 255
+#define stepper_motors_velocity 400
+#define stepper_motors_acceleration 200
 
 // construtor da classe robot
 
-Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper) {}
+Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
 
 // metodos envolvendo motores de passo (movimentacao)
 void Robot::motorsConfiguration(){
-    motor1.setMaxSpeed(velocity);  // velocidade maxima em passos/segundo
-    motor1.setAcceleration(acceleration);  // aceleracao em passos/segundo^2
+    motor1.setMaxSpeed(stepper_motors_velocity);  // velocidade maxima em passos/segundo
+    motor1.setAcceleration(stepper_motors_acceleration);  // aceleracao em passos/segundo^2
     
-    motor2.setMaxSpeed(velocity);
-    motor2.setAcceleration(acceleration);
+    motor2.setMaxSpeed(stepper_motors_velocity);
+    motor2.setAcceleration(stepper_motors_acceleration);
 
-    motor3.setMaxSpeed(velocity);
-    motor3.setAcceleration(acceleration);
+    motor3.setMaxSpeed(stepper_motors_velocity);
+    motor3.setAcceleration(stepper_motors_acceleration);
 
-    motor4.setMaxSpeed(velocity);
-    motor4.setAcceleration(acceleration);
+    motor4.setMaxSpeed(stepper_motors_velocity);
+    motor4.setAcceleration(stepper_motors_acceleration);
 };
 
 void Robot::moveForward(int steps) {
-    motor1.move(-steps);
-    motor3.move(-steps);
+    motor2.move(steps);
+    motor4.move(steps);
 
     while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
-    motor3.run();
+    motor2.run();
+    motor4.run();
   }
 };
 
 void Robot::moveBackward(int steps) {
-    motor1.move(steps);
-    motor3.move(steps);
+    motor2.move(-steps);
+    motor4.move(-steps);
 
     while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
         motor1.run();
@@ -52,8 +53,8 @@ void Robot::moveBackward(int steps) {
 };
 
 void Robot::moveLeft(int steps) {
-    motor2.move(steps);
-    motor4.move(steps);
+    motor1.move(-steps);
+    motor3.move(-steps);
 
     while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
         motor2.run();
@@ -62,8 +63,8 @@ void Robot::moveLeft(int steps) {
 };
 
 void Robot::moveRight(int steps) {
-    motor2.move(-steps);
-    motor4.move(-steps);
+    motor1.move(steps);
+    motor3.move(steps);
 
     while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
         motor2.run();
@@ -117,8 +118,18 @@ void Robot::closeClaw(){
     clawServo.write(100);
 };
 
-void Robot::moveClaw(int clawHeight){
+void Robot::moveClawUp(int dc_dislocation){
+    int dc_time;
+    dc_time = dc_dislocation / dc_velocity;
+    clawMotor.moveForward(dc_velocity);
+    delay(dc_time);
+};
 
+void Robot::moveClawDown(int dc_dislocation){
+    int dc_time;
+    dc_time = dc_dislocation / dc_velocity;
+    clawMotor.moveBackward(dc_velocity);
+    delay(dc_time);
 };
 
 // metodos envolvendo sensores

@@ -13,9 +13,9 @@
 // declaracao de componentes
 
 // motores de passo
-AccelStepper motor1(AccelStepper::DRIVER, 52, 50);
-AccelStepper motor2(AccelStepper::DRIVER, 53, 51);
-AccelStepper motor3(AccelStepper::DRIVER, 41, 39);
+AccelStepper motor1(AccelStepper::DRIVER, 51, 53);
+AccelStepper motor2(AccelStepper::DRIVER, 52, 50);
+AccelStepper motor3(AccelStepper::DRIVER, 49, 47);
 AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
 // sensores ultrassônicos
@@ -24,13 +24,13 @@ UltrasonicSensor usSensorRight(16, 17);
 UltrasonicSensor usSensorLeft(37, 35);
 
 // sensores infravermelho
-InfraredSensor irSensorLFL(5, 0);  //lineFollowerLeft
+InfraredSensor irSensorLFL(0, 0);  //lineFollowerLeft
 InfraredSensor irSensorLFC(7, 0);  //lineFollowerCenter
 InfraredSensor irSensorLFR(8, 0);  //lineFollowerRight
 
-InfraredSensor irSensorTableHeight1(6, 0); //Top sensor
-InfraredSensor irSensorTableHeight2(10 ,0);
-InfraredSensor irSensorTableHeight3(9 ,0);
+InfraredSensor irSensorTableHeight1(1, 0); //Top sensor
+InfraredSensor irSensorTableHeight2(6, 0);
+InfraredSensor irSensorTableHeight3(5, 0);
 InfraredSensor irSensorTableHeight4(11, 0); //Bottom sensor
 
 // sensor de cor da garra
@@ -40,8 +40,8 @@ ColorSensor clawSensor(30, 28, 24, 26, 22);
 Servo clawServo;
 
 // leds
-LED blueLed(0);
-LED redLed(0);
+LED blueLED(0);
+LED redLED(0);
 
 // raspberry
 SoftwareSerial raspy(0, 0);
@@ -49,7 +49,14 @@ SoftwareSerial raspy(0, 0);
 // bumper
 Bumper clawBumper(0);
 
+// motor dc
+MotorDC clawMotor(50, 52, 3, 0, 0);
+
+// robot
+Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, blueLED, redLED, raspy, clawBumper, clawMotor);
+
 void setup() {
+
     // configuracao de porta serial
     Serial.begin(9600);
 
@@ -59,23 +66,12 @@ void setup() {
     // pino do servo motor 
     clawServo.attach(11);
 
-    // configuração de velocidade e aceleração dos motores de passo
-    motor1.setMaxSpeed(200);  // Velocidade máxima em passos/segundo
-    motor1.setAcceleration(100);  // Aceleração em passos/segundo^2
-    
-    motor2.setMaxSpeed(200);
-    motor2.setAcceleration(100);
-
-    motor3.setMaxSpeed(200);
-    motor3.setAcceleration(100);
-
-    motor4.setMaxSpeed(200);
-    motor4.setAcceleration(100);
-
+    // configura os motores
+    Tortuga.motorsConfiguration();
 }
 
 void loop() {
-  
+    Tortuga.moveRight(1500);
   }
 
 // comentado - testes
@@ -134,3 +130,5 @@ void loop() {
   moveRight(100);
   moveLeft(100);
 */
+
+// lalalalala
