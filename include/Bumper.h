@@ -7,7 +7,7 @@ public:
     bool checkCube();
     
 private:
-    int _pin;
+    int pin;
 };
 
 #endif
