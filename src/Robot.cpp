@@ -55,7 +55,6 @@ void Robot::getCube(int table_height) {
 };
 
 // metodos envolvendo motores de passo (movimentacao)
-
 void Robot::moveForward(int steps) {
     motor1.move(-steps);
     motor3.move(steps);
@@ -286,18 +285,75 @@ char* Robot::checkCubeColor() {
     }
 };
 
-int checkVirtualWall() {
-    
+// metodos envolvendo visao
+int Robot::checkVirtualWall() {
+    // envia comando para a raspy
+    raspy.println("Checar parede virtual");
+
+    if (raspy.available() > 0) {
+        String command = raspy.readString(); // le mensagem recebida
+        delay(100);
+
+        if (command == "Parede virtual detectada") {
+            return true;
+            // para debugar
+            Serial.println("Fita detectada.");
+        }
+
+        if (command == "Parede virtual nao detectada") {
+            return false;
+            // para debugar
+            Serial.println("Fita nao detectada");
+        }
+    } else {
+        Serial.println("Raspy nao enviou nada");
+    }
 };
 
-int virtualWallDistance() {
+int Robot::virtualWallDistance() {
+    // envia comando para a raspy
+    raspy.println("Checar distancia da parede virtual");
+    delay(100);
 
+    if (raspy.available() > 0) {
+        int virtual_wall_distance = raspy.parseInt(); // le mensagem recebida
+        return virtual_wall_distance;
+    } else {
+        Serial.println("Raspy nao enviou nada");
+    }
 };
 
-int readTag() {
+int Robot::readTag() {
+    // envia comando para a raspy
+    raspy.println("Checar AprilTag");
+    delay(100);
 
+    if (raspy.available() > 0) {
+        int aprilTag = raspy.parseInt(); // le mensagem recebida
+        return aprilTag;
+    }  
 };
 
-int checkConteinerColor() {
+char* Robot::checkConteinerColor() {
+    // envia comando para a raspy
+    raspy.println("Checar cor do conteiner");
 
+    if (raspy.available() > 0) {
+        String command = raspy.readString(); // le mensagem recebida
+        delay(100);
+
+        if (command == "Vermelho") {
+            return "Vermelho";
+            // para debugar
+            Serial.println("Vermelho");
+        }
+
+        if (command == "Azul") {
+            return "Azul";
+            // para debugar
+            Serial.println("Azul");
+        }
+    } else {
+        Serial.println("Raspy nao enviou nada");
+    }
 }; 
