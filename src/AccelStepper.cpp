@@ -277,7 +277,7 @@ void AccelStepper::setMaxSpeed(float speed)
     }
 }
 
-float   AccelStepper::maxSpeed()
+float  AccelStepper::maxSpeed()
 {
     return _maxSpeed;
 }
