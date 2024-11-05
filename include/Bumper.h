@@ -4,7 +4,7 @@
 class Bumper {
 public:
     Bumper(int pin);
-    bool checkCube();
+    int checkCube();
     
 private:
     int pin;

@@ -9,32 +9,34 @@
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
+#define true 0
+#define false 1
 
 // declaracao de componentes
 
 // motores de passo
-AccelStepper motor1(AccelStepper::DRIVER, 51, 53);
-AccelStepper motor2(AccelStepper::DRIVER, 52, 50);
-AccelStepper motor3(AccelStepper::DRIVER, 49, 47);
+AccelStepper motor1(AccelStepper::DRIVER, 52, 50);
+AccelStepper motor2(AccelStepper::DRIVER, 51, 53);
+AccelStepper motor3(AccelStepper::DRIVER, 47, 49);
 AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
 // sensores ultrassônicos
-UltrasonicSensor usSensorFront(21, 20);
-UltrasonicSensor usSensorRight(16, 17);
+UltrasonicSensor usSensorFront(39, 41);
+UltrasonicSensor usSensorRight(31, 33);
 UltrasonicSensor usSensorLeft(37, 35);
 
 // sensores infravermelho
-InfraredSensor irSensorLFL(0, 0);  //lineFollowerLeft
-InfraredSensor irSensorLFC(7, 0);  //lineFollowerCenter
-InfraredSensor irSensorLFR(8, 0);  //lineFollowerRight
+InfraredSensor irSensorLFL(11, 0);  //lineFollowerLeft if1
+InfraredSensor irSensorLFC(6, 0);  //lineFollowerCenter if6
+InfraredSensor irSensorLFR(5, 0);  //lineFollowerRight if7
 
-InfraredSensor irSensorTableHeight1(1, 0); //Top sensor
-InfraredSensor irSensorTableHeight2(6, 0);
-InfraredSensor irSensorTableHeight3(5, 0);
-InfraredSensor irSensorTableHeight4(11, 0); //Bottom sensor
+InfraredSensor irSensorTableHeight1(12, 0); //Top sensor if2
+InfraredSensor irSensorTableHeight2(10, 0); // if3
+InfraredSensor irSensorTableHeight3(9, 0); // if4
+InfraredSensor irSensorTableHeight4(7, 0); //Bottom sensor if5
 
 // sensor de cor da garra
-ColorSensor clawSensor(30, 28, 24, 26, 22);
+ColorSensor clawSensor(17, 16, 14, 15, 18);
 
 // servo motor da garra
 Servo clawServo;
@@ -47,37 +49,38 @@ LED redLED(0);
 SoftwareSerial raspy(0, 0);
 
 // bumper
-Bumper clawBumper(0);
+Bumper clawBumper(22);
 
 // motor dc
-MotorDC clawMotor(50, 52, 3, 0, 0);
+MotorDC clawMotor(21, 20, 9, 0, 0);
 
 // robot
 Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, blueLED, redLED, raspy, clawBumper, clawMotor);
 
 void setup() {
-
-    // configuracao de porta serial
-    Serial.begin(9600);
-
-    // configuracao comunicacao raspy (rx-tx)
-    raspy.begin(115200);
-    
-    // pino do servo motor 
-    clawServo.attach(11);
-
-    // configura os motores
+    // condiguracao
+    Tortuga.servoConfiguration();
     Tortuga.motorsConfiguration();
+    Tortuga.serialConfiguration();
 }
 
 void loop() {
-    Tortuga.moveRight(1500);
+    while (1) {
+      Tortuga.moveForward(150);
+      int front_distance = usSensorFront.getDistance();
+      Serial.println("Front distance:");
+      Serial.println(front_distance);
+      if (front_distance <= 10) {
+        Tortuga.stop();
+        break;
+      }
+    }
+    int table_height = Tortuga.checkTableHeight();
+    Tortuga.checkForCube(table_height);
   }
 
 // comentado - testes
-
 /*
-
 // testes com infravermelho
    int distanceIR1 = irSensorTableHeight1.measureDistance();
    int distanceIR2 = irSensorTableHeight2.measureDistance();
@@ -129,6 +132,24 @@ void loop() {
   moveBackward(100);
   moveRight(100);
   moveLeft(100);
-*/
 
+  // teste movimentação basica
+ while (1) {
+      Tortuga.moveForward(150);
+      int front_distance = usSensorFront.getDistance();
+      Serial.println("Front distance:");
+      Serial.println(front_distance);
+      if (front_distance <= 10) {
+        Tortuga.stop();
+        break;
+      }
+    }
+    int table_height = Tortuga.checkTableHeight();
+    Tortuga.checkForCube(table_height);
+
+  // teste sensor de cor
+    char* color = Tortuga.checkCubeColor();
+    Serial.println(color);
+    Serial.println("\n");
+*/
 // lalalalala

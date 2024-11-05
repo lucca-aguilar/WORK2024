@@ -5,6 +5,10 @@ Bumper::Bumper(int pin) : pin(pin) {
     pinMode(pin, INPUT);  // Configura o pino do bumper como entrada
 }
 
-bool Bumper::checkCube() {
-    return digitalRead(pin) == HIGH;  // Retorna true se o bumper detectar um cubo
+int Bumper::checkCube() {
+    if (digitalRead(pin) == HIGH) {
+        return 0;
+    } else {
+        return 1;
+    } 
 }
