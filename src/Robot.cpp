@@ -1,6 +1,7 @@
 #include <AccelStepper.h>
 #include <Arduino.h>
 #include <Bumper.h>
+#include <BTS7960.h>
 #include <ColorSensor.h>
 #include <InfraredSensor.h>
 #include <LED.h>
@@ -12,11 +13,11 @@
 #define true 0
 #define false 1
 #define dc_velocity 255
-#define stepper_motors_velocity 400
-#define stepper_motors_acceleration 200
+#define stepper_motors_velocity 800
+#define stepper_motors_acceleration 600
 
 // construtor da classe robot
-Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
+Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, BTS7960& clawMotor) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
 
 // metodos de configuraçao
 void Robot::serialConfiguration() {
@@ -143,16 +144,18 @@ void Robot::closeClaw() {
 
 void Robot::moveClawUp(int dc_dislocation) {
     int dc_time;
-    dc_time = dc_dislocation / dc_velocity;
-    clawMotor.moveForward(dc_velocity);
+    dc_time = (dc_dislocation - 1.5375) / 4.5;
+    clawMotor.TurnLeft(255);
     delay(dc_time);
 };
 
 void Robot::moveClawDown(int dc_dislocation) {
     int dc_time;
-    dc_time = dc_dislocation / dc_velocity;
-    clawMotor.moveBackward(dc_velocity);
+    dc_time = (dc_dislocation - 1.5375) / 4.5;
+    
+    clawMotor.TurnRight(255);
     delay(dc_time);
+    clawMotor.Stop();
 };
 
 // metodos envolvendo sensores
@@ -164,32 +167,41 @@ int Robot::checkTableHeight() {
     3- move-se para a direita e realiza a leitura mais uma vez
     4- a altura e a media das tres alturas verificadas
     */
-    int irThreshold = 900;
+    int irThreshold = 950;
     int tableHeight[3], sensorsReadings[4];
 
     for (int counter = 0; counter < 3; counter++) {
         // leituras dos sensores infravermelho
-        sensorsReadings[0] = irSensorTableHeight1.measureDistance();
-        sensorsReadings[1] = irSensorTableHeight2.measureDistance();
-        sensorsReadings[2] = irSensorTableHeight3.measureDistance();
-        sensorsReadings[3] = irSensorTableHeight4.measureDistance();
+        sensorsReadings[0] = 0;
+        sensorsReadings[1] = 0;
+        sensorsReadings[2] = 0;
+        sensorsReadings[3] = 0;
 
-        if (sensorsReadings[4] < irThreshold && sensorsReadings[3] > irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold) {
+        sensorsReadings[0] = irSensorTableHeight1.measureDistance();
+        Serial.println(irSensorTableHeight1.measureDistance());
+        sensorsReadings[1] = irSensorTableHeight2.measureDistance();
+        Serial.println(irSensorTableHeight2.measureDistance());
+        sensorsReadings[2] = irSensorTableHeight3.measureDistance();
+        Serial.println(irSensorTableHeight3.measureDistance());
+        sensorsReadings[3] = irSensorTableHeight4.measureDistance();
+        Serial.println(irSensorTableHeight4.measureDistance());
+
+        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
             tableHeight[counter] = 5;
         }
-        if (sensorsReadings[4] < irThreshold && sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold) {
+        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
             tableHeight[counter] = 10;
         }
-        if (sensorsReadings[4] < irThreshold && sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] > irThreshold) {
+        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] < irThreshold && sensorsReadings[0] > irThreshold) {
             tableHeight[counter] = 15;
         }
 
         if (counter == 0) {
-            moveLeft(135);
+            moveLeft(100);
         } 
 
         if (counter == 1) {
-            moveRight(270);
+            moveRight(200);
         }
     }
 
@@ -210,13 +222,18 @@ void Robot::checkForCube(int tableHeight) {
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-   int irThreshold = 900;
+   int irThreshold = 950;
 
    while (1) {
         int frontDistance = usSensorFront.getDistance();
         moveLeft(70);
         if (frontDistance > 10) {
-            while (1) {
+            break;
+        }
+    }
+    
+     while (1) {
+                moveRight(70);
                 int topSensorReading;
                 if (tableHeight == 5) {
                     topSensorReading = irSensorTableHeight3.measureDistance();
@@ -239,8 +256,6 @@ void Robot::checkForCube(int tableHeight) {
                     if (topSensorReading < irThreshold) {
                         stop();
                         break;
-                    }
-                }
             }
         }
     }

@@ -4,6 +4,7 @@
 #include <AccelStepper.h>
 #include <Arduino.h>
 #include <Bumper.h>
+#include <BTS7960.h>
 #include <ColorSensor.h>
 #include <InfraredSensor.h>
 #include <LED.h>
@@ -35,11 +36,11 @@ private:
     LED redLED;
     SoftwareSerial raspy;
     Bumper clawBumper;
-    MotorDC clawMotor;
+    BTS7960 clawMotor;
 
 public:
     // construtor da classe robot
-    Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFL, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFR, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor);
+    Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFL, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFR, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, BTS7960& clawMotor);
 
     // metodos de configuracao
     void servoConfiguration();
