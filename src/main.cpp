@@ -10,6 +10,8 @@
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
+#define stepper_motors_velocity 800
+#define stepper_motors_acceleration 600
 #define true 0
 #define false 1
 
@@ -23,8 +25,8 @@ AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
 // sensores ultrassônicos
 //UltrasonicSensor usSensorFront(39, 41);
-UltrasonicSensor usSensorFront(52, 50);
-UltrasonicSensor usSensorRight(20, 21);
+UltrasonicSensor usSensorFront(39, 41);
+UltrasonicSensor usSensorRight(31, 33);
 UltrasonicSensor usSensorLeft(37, 35);
 
 // sensores infravermelho
@@ -54,7 +56,7 @@ SoftwareSerial raspy(0, 0);
 Bumper clawBumper(22);
 
 // motor dc
-BTS7960 clawMotor(0, 12, 13);
+MotorDC clawMotor(21, 20, 5, 0, 0);
 
 // robot
 Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, blueLED, redLED, raspy, clawBumper, clawMotor);
@@ -63,13 +65,27 @@ void setup() {
     // configuracao
     Serial.begin(9600);
     Tortuga.servoConfiguration();
-    Tortuga.motorsConfiguration();
+    Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
     Tortuga.serialConfiguration();
 }
 
 void loop() {
-   Tortuga.moveClawDown(10);
-   delay(100000000);
+  while (1) {
+      Tortuga.moveForward(150);
+      int front_distance = usSensorFront.getDistance();
+      Serial.println("Front distance:");
+      Serial.println(front_distance);
+      if (front_distance <= 10) {
+        Tortuga.motorsConfiguration(400, 400);
+        Tortuga.moveForward(70);
+        Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+        break;
+      }
+    }
+    int table_height = Tortuga.checkTableHeight();
+    Tortuga.checkForCube(table_height);
+    Tortuga.stop();
+    delay(10000000);
 }
 
 // comentado - testes

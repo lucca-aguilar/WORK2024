@@ -17,7 +17,7 @@
 #define stepper_motors_acceleration 600
 
 // construtor da classe robot
-Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, BTS7960& clawMotor) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
+Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
 
 // metodos de configuraçao
 void Robot::serialConfiguration() {
@@ -28,18 +28,18 @@ void Robot::servoConfiguration() {
     clawServo.attach(7);
 };
 
-void Robot::motorsConfiguration(){
-    motor1.setMaxSpeed(stepper_motors_velocity);  // velocidade maxima em passos/segundo
-    motor1.setAcceleration(stepper_motors_acceleration);  // aceleracao em passos/segundo^2
+void Robot::motorsConfiguration(int velocity, int acceleration){
+    motor1.setMaxSpeed(velocity);  // velocidade maxima em passos/segundo
+    motor1.setAcceleration(acceleration);  // aceleracao em passos/segundo^2
     
-    motor2.setMaxSpeed(stepper_motors_velocity);
-    motor2.setAcceleration(stepper_motors_acceleration);
+    motor2.setMaxSpeed(velocity);
+    motor2.setAcceleration(acceleration);
 
-    motor3.setMaxSpeed(stepper_motors_velocity);
-    motor3.setAcceleration(stepper_motors_acceleration);
+    motor3.setMaxSpeed(velocity);
+    motor3.setAcceleration(acceleration);
 
-    motor4.setMaxSpeed(stepper_motors_velocity);
-    motor4.setAcceleration(stepper_motors_acceleration);
+    motor4.setMaxSpeed(velocity);
+    motor4.setAcceleration(acceleration);
 };
 
 // metodos mais gerais
@@ -143,19 +143,22 @@ void Robot::closeClaw() {
 };
 
 void Robot::moveClawUp(int dc_dislocation) {
-    int dc_time;
-    dc_time = (dc_dislocation - 1.5375) / 4.5;
-    clawMotor.TurnLeft(255);
-    delay(dc_time);
+    clawMotor.moveForward(255);
+    delay(10000);
 };
 
 void Robot::moveClawDown(int dc_dislocation) {
-    int dc_time;
-    dc_time = (dc_dislocation - 1.5375) / 4.5;
-    
-    clawMotor.TurnRight(255);
+    Serial.print("Iniciou a função\n");
+    int dc_time = 0;
+    Serial.print("Tempo = 0\n");
+    dc_time = ((dc_dislocation + 4 - 1.5375) / 4.5) * 1000;
+    Serial.print("Calculou o tempo:\n");
+    Serial.println(dc_time);
+    clawMotor.moveBackward(255);
+    Serial.print("Ligou o motor\n");
     delay(dc_time);
-    clawMotor.Stop();
+    Serial.print("Moveu\n");
+    clawMotor.stop();
 };
 
 // metodos envolvendo sensores
@@ -197,11 +200,11 @@ int Robot::checkTableHeight() {
         }
 
         if (counter == 0) {
-            moveLeft(100);
+            moveLeft(200);
         } 
 
         if (counter == 1) {
-            moveRight(200);
+            moveRight(400);
         }
     }
 
@@ -223,22 +226,18 @@ void Robot::checkForCube(int tableHeight) {
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
    int irThreshold = 950;
+   int cubeFound = false;
 
-   while (1) {
+   if (cubeFound == false) {
+        while (1) {
         int frontDistance = usSensorFront.getDistance();
         moveLeft(70);
-        if (frontDistance > 10) {
-            break;
-        }
-    }
-    
-     while (1) {
-                moveRight(70);
-                int topSensorReading;
+        int topSensorReading;
                 if (tableHeight == 5) {
                     topSensorReading = irSensorTableHeight3.measureDistance();
                     if (topSensorReading < irThreshold) {
                         stop();
+                        cubeFound = true;
                         break;
                     }
                 }
@@ -247,6 +246,7 @@ void Robot::checkForCube(int tableHeight) {
                     topSensorReading = irSensorTableHeight2.measureDistance();
                     if (topSensorReading < irThreshold) {
                         stop();
+                        cubeFound = true;
                         break;
                     }
                 }
@@ -255,9 +255,48 @@ void Robot::checkForCube(int tableHeight) {
                     topSensorReading = irSensorTableHeight1.measureDistance();
                     if (topSensorReading < irThreshold) {
                         stop();
+                        cubeFound = true;
                         break;
             }
         }
+
+        if (frontDistance > 10) {
+            break;
+        }
+    }
+   }
+    
+    if (cubeFound == false) {
+        while (1) {
+                moveRight(70);
+                int topSensorReading;
+                if (tableHeight == 5) {
+                    topSensorReading = irSensorTableHeight3.measureDistance();
+                    if (topSensorReading < irThreshold) {
+                        stop();
+                        cubeFound = true;
+                        break;
+                    }
+                }
+
+                if (tableHeight == 10) {
+                    topSensorReading = irSensorTableHeight2.measureDistance();
+                    if (topSensorReading < irThreshold) {
+                        stop();
+                        cubeFound = true;
+                        break;
+                    }
+                }
+
+                if (tableHeight == 15) {
+                    topSensorReading = irSensorTableHeight1.measureDistance();
+                    if (topSensorReading < irThreshold) {
+                        stop();
+                        cubeFound = true;
+                        break;
+            }
+        }
+    }
     }
 };
 

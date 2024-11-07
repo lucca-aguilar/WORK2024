@@ -36,11 +36,11 @@ private:
     LED redLED;
     SoftwareSerial raspy;
     Bumper clawBumper;
-    BTS7960 clawMotor;
+    MotorDC clawMotor;
 
 public:
     // construtor da classe robot
-    Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFL, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFR, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, BTS7960& clawMotor);
+    Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFL, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFR, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor);
 
     // metodos de configuracao
     void servoConfiguration();
@@ -49,7 +49,7 @@ public:
     // metodos mais gerais???
     void getCube(int table_height);
     int cubePresence();
-    void motorsConfiguration();
+    void motorsConfiguration(int velocity, int acceleration);
 
     // metodos de movimentacao
     void moveForward(int steps);
