@@ -121,6 +121,7 @@ void Robot::moveRight(int steps) {
     }
 };
 
+// Rotacao 360 graus = 2250 passos
 void Robot::rotateClockwise(int steps) {
   motor1.move(steps);
   motor2.move(steps);
@@ -254,6 +255,7 @@ void Robot::checkForCube(int tableHeight) {
     */
    int irThreshold = 950;
    int cubeFound = false;
+   int distanceNotFound = 0;
 
    if (cubeFound == false) {
         while (1) {
@@ -285,6 +287,7 @@ void Robot::checkForCube(int tableHeight) {
                         cubeFound = true;
                         break;
             }
+            distanceNotFound += 70;
         }
 
         if (frontDistance > 10) {
@@ -294,7 +297,9 @@ void Robot::checkForCube(int tableHeight) {
    }
     
     if (cubeFound == false) {
+        moveRight(distanceNotFound - 20);
         while (1) {
+                int frontDistance = usSensorFront.getDistance();
                 moveRight(70);
                 int topSensorReading;
                 if (tableHeight == 5) {
@@ -321,9 +326,13 @@ void Robot::checkForCube(int tableHeight) {
                         stop();
                         cubeFound = true;
                         break;
-            }
+                    }
+                }
+        if (frontDistance > 10) {
+            break;
         }
     }
+
     }
 };
 

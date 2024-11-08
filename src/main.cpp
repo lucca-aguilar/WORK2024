@@ -34,17 +34,17 @@ void setup() {
 void loop() {
   delay(1000);
   
-Serial.println("Entrou na função");
+// Serial.println("Entrou na função");
     while(1) {
-        Serial.println("Entrou na função");
+        // Serial.println("Entrou na função");
         // variaveis globais
         int table_height = 0;
         int cube_counter = 0;
-        Serial.println("Definiu variaveis");
+        // Serial.println("Definiu variaveis");
         // coloca a garra nas posicoes corretas
-        Tortuga.defaultClawPosition();
+        // Tortuga.defaultClawPosition();
         delay(1000);
-        Serial.println("garra inicial");
+        //Serial.println("garra inicial");
         while (1) { // anda ate encontrar a mesa
             Tortuga.moveForward(150);
             int front_distance = usSensorFront.getDistance();
@@ -60,10 +60,13 @@ Serial.println("Entrou na função");
 
         // escaneia em busca de um cubo
         Tortuga.checkForCube(table_height);
+        delay(4000);
+        Tortuga.moveBackward(600);
+        Tortuga.rotateClockwise(2250);
 
         // pega o cubo
-        Tortuga.getCube(table_height);
-        cube_counter++;
+        //Tortuga.getCube(table_height);
+        //cube_counter++;
 
         break;
   // funcoes para cada rodada, vai ficar comentado por enquanto  
@@ -95,7 +98,7 @@ Serial.println("Entrou na função");
 
     delay(1000); // Pausa para evitar execuções muito rápidas
   */
-}
+  }
 }
 
 // comentado - testes recorrentes
