@@ -2,17 +2,16 @@
 #include <Setup.h>
 
 void basicManipulationTest() {
+    Serial.println("Entrou na função");
     while(true) {
-        // inicializa
-        start();
-
+        Serial.println("Entrou na função");
         // variaveis globais
         int tableHeight = 0;
         int cubeCounter = 0;
-
+        Serial.println("Definiu variaveis");
         // coloca a garra nas posicoes corretas
         Tortuga.defaultClawPosition();
-
+        Serial.println("garra inicial");
         while (true) { // anda ate encontrar a mesa
             Tortuga.moveForward(150);
             int front_distance = usSensorFront.getDistance();
@@ -23,6 +22,7 @@ void basicManipulationTest() {
                 break;
             }
         }
+        Serial.println("encontrou a mesa");
         // verifica altura da mesa
         int table_height = Tortuga.checkTableHeight();
 

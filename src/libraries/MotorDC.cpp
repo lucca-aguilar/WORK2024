@@ -52,4 +52,5 @@ unsigned int MotorDC::getEncoder(){
 
 int MotorDC::setEncoder(int value){
     posEncoder = value;
+    return posEncoder;
 }

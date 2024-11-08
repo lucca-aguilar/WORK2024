@@ -15,8 +15,7 @@
 #define true 0
 #define false 1
 
-void start() {
-    // declaracao dos componentes 
+ // declaracao dos componentes 
     AccelStepper motor1(AccelStepper::DRIVER, 52, 50);
     AccelStepper motor2(AccelStepper::DRIVER, 51, 53);
     AccelStepper motor3(AccelStepper::DRIVER, 47, 49);
@@ -60,6 +59,7 @@ void start() {
     // robot
     Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, blueLED, redLED, raspy, clawBumper, clawMotor);
 
+void start() {
     // configuracoes
     Serial.begin(9600);
     Tortuga.servoConfiguration();

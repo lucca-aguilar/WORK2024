@@ -13,10 +13,9 @@
 #define false 1
 #define dc_velocity 255
 #define stepper_motors_velocity 800
-#define stepper_motors_acceleration 600
+#define stepper_motors_acceleration 800
 
 // construtor da classe robot
-Robot::Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& blueLED, LED& redLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor) : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFC), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), blueLED(blueLED), redLED(redLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
 
 // metodos de configuraçao
 void Robot::serialConfiguration() {
@@ -52,25 +51,29 @@ int Robot::cubePresence(){
 
 void Robot::getCube(int table_height) {
     // abre a garra
-    clawServo.writeMicroseconds(1200);
-    delay(1000);
+    clawServo.writeMicroseconds(1300);
+    delay(1200);
+    clawServo.writeMicroseconds(1500);
 
     if (table_height == 5) {
-        moveBackward(70);
+        moveBackward(250);
+        moveRight(90);
         moveClawDown(34);
-        moveForward(70);
+        moveForward(100);
     }
 
     if (table_height == 10) {
-        moveBackward(70);
+        moveBackward(250);
+        moveRight(90);
         moveClawDown(29);
-        moveForward(70);
+        moveForward(100);
     }
 
     if (table_height == 15) {
-        moveBackward(70);
+        moveBackward(250);
+        moveRight(90);
         moveClawDown(24);
-        moveForward(70);
+        moveForward(100);
     }
 
     defaultClawPosition();
@@ -180,12 +183,13 @@ void Robot::moveClawDown(int dc_dislocation) {
 
 void Robot::defaultClawPosition() {
     // fecha a garra
-    clawServo.writeMicroseconds(1800);
-    delay(1000);
+    clawServo.writeMicroseconds(1700);
+    delay(1200);
+    clawServo.writeMicroseconds(1500);
 
     // volta a garra para cima
     clawMotor.moveForward(255);
-    delay(10000);
+    delay(8000);
 };
 
 // metodos envolvendo sensores
@@ -208,13 +212,9 @@ int Robot::checkTableHeight() {
         sensorsReadings[3] = 0;
 
         sensorsReadings[0] = irSensorTableHeight1.measureDistance();
-        Serial.println(irSensorTableHeight1.measureDistance());
         sensorsReadings[1] = irSensorTableHeight2.measureDistance();
-        Serial.println(irSensorTableHeight2.measureDistance());
         sensorsReadings[2] = irSensorTableHeight3.measureDistance();
-        Serial.println(irSensorTableHeight3.measureDistance());
         sensorsReadings[3] = irSensorTableHeight4.measureDistance();
-        Serial.println(irSensorTableHeight4.measureDistance());
 
         if (sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
             tableHeight[counter] = 5;

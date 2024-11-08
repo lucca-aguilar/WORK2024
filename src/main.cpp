@@ -25,11 +25,47 @@
 #include <finals.h>
 
 void setup() {
+  Serial.println("Entrou na setup");
+  start();
+  Serial.println("Deu start");
 }
 
-void loop() {
-  basicManipulationTest();
 
+void loop() {
+  delay(1000);
+  
+Serial.println("Entrou na função");
+    while(1) {
+        Serial.println("Entrou na função");
+        // variaveis globais
+        int table_height = 0;
+        int cube_counter = 0;
+        Serial.println("Definiu variaveis");
+        // coloca a garra nas posicoes corretas
+        Tortuga.defaultClawPosition();
+        delay(1000);
+        Serial.println("garra inicial");
+        while (1) { // anda ate encontrar a mesa
+            Tortuga.moveForward(150);
+            int front_distance = usSensorFront.getDistance();
+            if (front_distance <= 10) { // se alinha com a mesa
+                Tortuga.motorsConfiguration(400, 400);
+                Tortuga.moveForward(70);
+                Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+                break;
+            }
+        }
+        // verifica altura da mesa
+        table_height = Tortuga.checkTableHeight();
+
+        // escaneia em busca de um cubo
+        Tortuga.checkForCube(table_height);
+
+        // pega o cubo
+        Tortuga.getCube(table_height);
+        cube_counter++;
+
+        break;
   // funcoes para cada rodada, vai ficar comentado por enquanto  
   /*
   int round = 1; // Altere o número da rodada conforme necessário
@@ -59,6 +95,7 @@ void loop() {
 
     delay(1000); // Pausa para evitar execuções muito rápidas
   */
+}
 }
 
 // comentado - testes recorrentes
