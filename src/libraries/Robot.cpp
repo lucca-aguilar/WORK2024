@@ -1,7 +1,6 @@
 #include <AccelStepper.h>
 #include <Arduino.h>
 #include <Bumper.h>
-#include <BTS7960.h>
 #include <ColorSensor.h>
 #include <InfraredSensor.h>
 #include <LED.h>
@@ -52,6 +51,29 @@ int Robot::cubePresence(){
 };
 
 void Robot::getCube(int table_height) {
+    // abre a garra
+    clawServo.writeMicroseconds(1200);
+    delay(1000);
+
+    if (table_height == 5) {
+        moveBackward(70);
+        moveClawDown(34);
+        moveForward(70);
+    }
+
+    if (table_height == 10) {
+        moveBackward(70);
+        moveClawDown(29);
+        moveForward(70);
+    }
+
+    if (table_height == 15) {
+        moveBackward(70);
+        moveClawDown(24);
+        moveForward(70);
+    }
+
+    defaultClawPosition();
 
 };
 
@@ -99,8 +121,8 @@ void Robot::moveRight(int steps) {
 void Robot::rotateClockwise(int steps) {
   motor1.move(steps);
   motor2.move(steps);
-  motor3.move(-steps);
-  motor4.move(-steps);
+  motor3.move(steps);
+  motor4.move(steps);
 
   while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
     motor1.run();
@@ -113,8 +135,8 @@ void Robot::rotateClockwise(int steps) {
 void Robot::rotateAntiClockwise(int steps) {
   motor1.move(-steps);
   motor2.move(-steps);
-  motor3.move(steps);
-  motor4.move(steps);
+  motor3.move(-steps);
+  motor4.move(-steps);
 
   while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
     motor1.run();
@@ -148,17 +170,22 @@ void Robot::moveClawUp(int dc_dislocation) {
 };
 
 void Robot::moveClawDown(int dc_dislocation) {
-    Serial.print("Iniciou a função\n");
     int dc_time = 0;
-    Serial.print("Tempo = 0\n");
     dc_time = ((dc_dislocation + 4 - 1.5375) / 4.5) * 1000;
-    Serial.print("Calculou o tempo:\n");
     Serial.println(dc_time);
     clawMotor.moveBackward(255);
-    Serial.print("Ligou o motor\n");
     delay(dc_time);
-    Serial.print("Moveu\n");
     clawMotor.stop();
+};
+
+void Robot::defaultClawPosition() {
+    // fecha a garra
+    clawServo.writeMicroseconds(1800);
+    delay(1000);
+
+    // volta a garra para cima
+    clawMotor.moveForward(255);
+    delay(10000);
 };
 
 // metodos envolvendo sensores

@@ -1,6 +1,7 @@
+// depois podemos tirar todas as outras bibliotecas e deixar apenas setup e os rounds :)
+// bibliotecas de componentes
 #include <AccelStepper.h>
 #include <Arduino.h>
-#include <BTS7960.h>
 #include <Bumper.h>
 #include <ColorSensor.h>
 #include <InfraredSensor.h>
@@ -10,73 +11,57 @@
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
-#define stepper_motors_velocity 800
-#define stepper_motors_acceleration 600
-#define true 0
-#define false 1
 
-// declaracao de componentes
+// biblioteca de setup
+#include <Setup.h>
 
-// motores de passo
-AccelStepper motor1(AccelStepper::DRIVER, 52, 50);
-AccelStepper motor2(AccelStepper::DRIVER, 51, 53);
-AccelStepper motor3(AccelStepper::DRIVER, 47, 49);
-AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
-
-// sensores ultrassônicos
-//UltrasonicSensor usSensorFront(39, 41);
-UltrasonicSensor usSensorFront(39, 41);
-UltrasonicSensor usSensorRight(31, 33);
-UltrasonicSensor usSensorLeft(37, 35);
-
-// sensores infravermelho
-InfraredSensor irSensorLFL(11, 0);  //lineFollowerLeft if1
-InfraredSensor irSensorLFC(6, 0);  //lineFollowerCenter if6
-InfraredSensor irSensorLFR(5, 0);  //lineFollowerRight if7
-
-InfraredSensor irSensorTableHeight1(12, 0); //Top sensor if2
-InfraredSensor irSensorTableHeight2(10, 0); // if3
-InfraredSensor irSensorTableHeight3(9, 0); // if4
-InfraredSensor irSensorTableHeight4(7, 0); //Bottom sensor if5
-
-// sensor de cor da garra
-ColorSensor clawSensor(17, 16, 14, 15, 18);
-
-// servo motor da garra
-Servo clawServo;
-
-// leds
-LED blueLED(0);
-LED redLED(0);
-
-// raspberry
-SoftwareSerial raspy(0, 0);
-
-// bumper
-Bumper clawBumper(22);
-
-// motor dc
-MotorDC clawMotor(21, 20, 5, 0, 0);
-
-// robot
-Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, blueLED, redLED, raspy, clawBumper, clawMotor);
+// bibliotecas de rounds
+#include <advanced-manipulation-test.h>
+#include <advanced-transportation-test-I.h>
+#include <advanced-transportation-test-II.h>
+#include <basic-manipulation-test.h>
+#include <basic-transportation-test-I.h>
+#include <basic-transportation-test-II.h>
+#include <finals.h>
 
 void setup() {
-    // configuracao
-    Serial.begin(9600);
-    Tortuga.servoConfiguration();
-    Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
-    Tortuga.serialConfiguration();
 }
 
 void loop() {
-  int timer = clawServo.readMicroseconds();
-  Serial.println(timer);
-  delay(1000);
-  clawServo.writeMicroseconds(1000);
+  basicManipulationTest();
+
+  // funcoes para cada rodada, vai ficar comentado por enquanto  
+  /*
+  int round = 1; // Altere o número da rodada conforme necessário
+
+    switch (round) {
+        case 1:
+            basicManipulationTestI();
+            break;
+        case 2:
+            basicTransportationTestI();
+            break;
+        case 3:
+            basicTransportationTestII();
+            break;
+        case 4:
+            advancedManipulationTest();
+        case 5:
+            advancedTransportationTestI();
+        case 6:
+            advancedTransportationTestII();
+        case 7:
+            finals();
+        default:
+            Serial.println("Rodada inválida.");
+            break;
+    }
+
+    delay(1000); // Pausa para evitar execuções muito rápidas
+  */
 }
 
-// comentado - testes
+// comentado - testes recorrentes
 /*
 // testes com infravermelho
    int distanceIR1 = irSensorTableHeight1.measureDistance();

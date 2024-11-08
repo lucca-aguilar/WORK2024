@@ -1,0 +1,37 @@
+#include <basic-manipulation-test.h>
+#include <Setup.h>
+
+void basicManipulationTest() {
+    while(true) {
+        // inicializa
+        start();
+
+        // variaveis globais
+        int tableHeight = 0;
+        int cubeCounter = 0;
+
+        // coloca a garra nas posicoes corretas
+        Tortuga.defaultClawPosition();
+
+        while (true) { // anda ate encontrar a mesa
+            Tortuga.moveForward(150);
+            int front_distance = usSensorFront.getDistance();
+            if (front_distance <= 10) { // se alinha com a mesa
+                Tortuga.motorsConfiguration(400, 400);
+                Tortuga.moveForward(70);
+                Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+                break;
+            }
+        }
+        // verifica altura da mesa
+        int table_height = Tortuga.checkTableHeight();
+
+        // escaneia em busca de um cubo
+        Tortuga.checkForCube(table_height);
+
+        // pega o cubo
+        Tortuga.getCube(table_height);
+
+        break;
+    }
+}
