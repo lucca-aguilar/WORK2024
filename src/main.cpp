@@ -70,22 +70,10 @@ void setup() {
 }
 
 void loop() {
-  while (1) {
-      Tortuga.moveForward(150);
-      int front_distance = usSensorFront.getDistance();
-      Serial.println("Front distance:");
-      Serial.println(front_distance);
-      if (front_distance <= 10) {
-        Tortuga.motorsConfiguration(400, 400);
-        Tortuga.moveForward(70);
-        Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
-        break;
-      }
-    }
-    int table_height = Tortuga.checkTableHeight();
-    Tortuga.checkForCube(table_height);
-    Tortuga.stop();
-    delay(10000000);
+  int timer = clawServo.readMicroseconds();
+  Serial.println(timer);
+  delay(1000);
+  clawServo.writeMicroseconds(1000);
 }
 
 // comentado - testes
