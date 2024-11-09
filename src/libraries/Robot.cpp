@@ -26,10 +26,10 @@ void Robot::servoConfiguration() {
     clawServo.attach(7);
 };
 
-void Robot::motorsConfiguration(int velocity, int acceleration){
+void Robot::motorsConfiguration(int velocity, int acceleration) {
     motor1.setMaxSpeed(velocity);  // velocidade maxima em passos/segundo
     motor1.setAcceleration(acceleration);  // aceleracao em passos/segundo^2
-    
+
     motor2.setMaxSpeed(velocity);
     motor2.setAcceleration(acceleration);
 
@@ -41,7 +41,7 @@ void Robot::motorsConfiguration(int velocity, int acceleration){
 };
 
 // metodos mais gerais
-int Robot::cubePresence(){
+int Robot::cubePresence() {
     if (clawBumper.checkCube() == true) {
         return true;
     } else {
@@ -51,33 +51,32 @@ int Robot::cubePresence(){
 
 void Robot::getCube(int table_height) {
     // abre a garra
-    clawServo.writeMicroseconds(1300);
+    clawServo.writeMicroseconds(1300); //1300
     delay(1200);
-    clawServo.writeMicroseconds(1500);
+    clawServo.writeMicroseconds(1500); //1500
 
     if (table_height == 5) {
         moveBackward(250);
-        moveRight(90);
+        moveRight(95);
         moveClawDown(34);
         moveForward(100);
     }
 
     if (table_height == 10) {
         moveBackward(250);
-        moveRight(90);
+        moveRight(95);
         moveClawDown(29);
         moveForward(100);
     }
 
     if (table_height == 15) {
         moveBackward(250);
-        moveRight(90);
+        moveRight(95);
         moveClawDown(24);
         moveForward(100);
     }
 
     defaultClawPosition();
-
 };
 
 // metodos envolvendo motores de passo (movimentacao)
@@ -86,9 +85,9 @@ void Robot::moveForward(int steps) {
     motor3.move(steps);
 
     while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
-    motor3.run();
-  }
+        motor1.run();
+        motor3.run();
+    }
 };
 
 void Robot::moveBackward(int steps) {
@@ -123,34 +122,34 @@ void Robot::moveRight(int steps) {
 
 // Rotacao 360 graus = 2250 passos
 void Robot::rotateClockwise(int steps) {
-  motor1.move(steps);
-  motor2.move(steps);
-  motor3.move(steps);
-  motor4.move(steps);
+    motor1.move(steps);
+    motor2.move(steps);
+    motor3.move(steps);
+    motor4.move(steps);
 
-  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
-    motor2.run();
-    motor3.run();
-    motor4.run();
-  }
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+        motor1.run();
+        motor2.run();
+        motor3.run();
+        motor4.run();
+    }
 };
 
 void Robot::rotateAntiClockwise(int steps) {
-  motor1.move(-steps);
-  motor2.move(-steps);
-  motor3.move(-steps);
-  motor4.move(-steps);
+    motor1.move(-steps);
+    motor2.move(-steps);
+    motor3.move(-steps);
+    motor4.move(-steps);
 
-  while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
-    motor1.run();
-    motor2.run();
-    motor3.run();
-    motor4.run();
-  }
+    while (motor1.distanceToGo() != 0 || motor2.distanceToGo() != 0 || motor3.distanceToGo() != 0 || motor4.distanceToGo() != 0) {
+        motor1.run();
+        motor2.run();
+        motor3.run();
+        motor4.run();
+    }
 };
 
-void Robot::stop(){ 
+void Robot::stop() {
     // para todos os motores
     motor1.stop();
     motor2.stop();
@@ -229,7 +228,7 @@ int Robot::checkTableHeight() {
 
         if (counter == 0) {
             moveLeft(200);
-        } 
+        }
 
         if (counter == 1) {
             moveRight(400);
@@ -253,107 +252,106 @@ void Robot::checkForCube(int tableHeight) {
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-   int irThreshold = 950;
-   int cubeFound = false;
-   int distanceNotFound = 0;
+    int irThreshold = 950;
+    int cubeFound = false;
+    int distanceNotFound = 0;
 
-   if (cubeFound == false) {
-        while (1) {
-        int frontDistance = usSensorFront.getDistance();
-        moveLeft(70);
-        int topSensorReading;
-                if (tableHeight == 5) {
-                    topSensorReading = irSensorTableHeight3.measureDistance();
-                    if (topSensorReading < irThreshold) {
-                        stop();
-                        cubeFound = true;
-                        break;
-                    }
-                }
-
-                if (tableHeight == 10) {
-                    topSensorReading = irSensorTableHeight2.measureDistance();
-                    if (topSensorReading < irThreshold) {
-                        stop();
-                        cubeFound = true;
-                        break;
-                    }
-                }
-
-                if (tableHeight == 15) {
-                    topSensorReading = irSensorTableHeight1.measureDistance();
-                    if (topSensorReading < irThreshold) {
-                        stop();
-                        cubeFound = true;
-                        break;
-            }
-            distanceNotFound += 70;
-        }
-
-        if (frontDistance > 10) {
-            break;
-        }
-    }
-   }
-    
     if (cubeFound == false) {
-        moveRight(distanceNotFound - 20);
         while (1) {
-                int frontDistance = usSensorFront.getDistance();
-                moveRight(70);
-                int topSensorReading;
-                if (tableHeight == 5) {
-                    topSensorReading = irSensorTableHeight3.measureDistance();
-                    if (topSensorReading < irThreshold) {
-                        stop();
-                        cubeFound = true;
-                        break;
-                    }
+            int frontDistance = usSensorFront.getDistance();
+            moveLeft(70);
+            int topSensorReading;
+            if (tableHeight == 5) {
+                topSensorReading = irSensorTableHeight3.measureDistance();
+                if (topSensorReading < irThreshold) {
+                    stop();
+                    cubeFound = true;
+                    break;
                 }
+            }
 
-                if (tableHeight == 10) {
-                    topSensorReading = irSensorTableHeight2.measureDistance();
-                    if (topSensorReading < irThreshold) {
-                        stop();
-                        cubeFound = true;
-                        break;
-                    }
+            if (tableHeight == 10) {
+                topSensorReading = irSensorTableHeight2.measureDistance();
+                if (topSensorReading < irThreshold) {
+                    stop();
+                    cubeFound = true;
+                    break;
                 }
+            }
 
-                if (tableHeight == 15) {
-                    topSensorReading = irSensorTableHeight1.measureDistance();
-                    if (topSensorReading < irThreshold) {
-                        stop();
-                        cubeFound = true;
-                        break;
-                    }
+            if (tableHeight == 15) {
+                topSensorReading = irSensorTableHeight1.measureDistance();
+                if (topSensorReading < irThreshold) {
+                    stop();
+                    cubeFound = true;
+                    break;
                 }
-        if (frontDistance > 10) {
-            break;
+                distanceNotFound += 70;
+            }
+
+            if (frontDistance > 10) {
+                break;
+            }
         }
     }
 
+    if (cubeFound == false) {
+        moveRight(distanceNotFound - 70);
+        while (1) {
+            int frontDistance = usSensorFront.getDistance();
+            moveRight(70);
+            int topSensorReading;
+            if (tableHeight == 5) {
+                topSensorReading = irSensorTableHeight3.measureDistance();
+                if (topSensorReading < irThreshold) {
+                    stop();
+                    cubeFound = true;
+                    break;
+                }
+            }
+
+            if (tableHeight == 10) {
+                topSensorReading = irSensorTableHeight2.measureDistance();
+                if (topSensorReading < irThreshold) {
+                    stop();
+                    cubeFound = true;
+                    break;
+                }
+            }
+
+            if (tableHeight == 15) {
+                topSensorReading = irSensorTableHeight1.measureDistance();
+                if (topSensorReading < irThreshold) {
+                    stop();
+                    cubeFound = true;
+                    break;
+                }
+            }
+            if (frontDistance > 10) {
+                break;
+            }
+        }
     }
 };
 
-        // metodos dos sensores infravermelhos de segue linha
-        void Robot::followLine(int activator) {
-            while (activator == true) {
-                int leftReading = irSensorLFL.measureDistance();
-                int centerReading = irSensorLFC.measureDistance();
-                int rightReading =  irSensorLFR.measureDistance();
+// metodos dos sensores infravermelhos de segue linha
+void Robot::followLine(int activator) {
+    while (activator == true) {
+        int leftReading = irSensorLFL.measureDistance();
+        int centerReading = irSensorLFC.measureDistance();
+        int rightReading = irSensorLFR.measureDistance();
 
-                if (centerReading > 900 && leftReading < 900 && centerReading < 900) {
-                    moveForward(50);
-                } else {
-                    if (centerReading < 900 && leftReading > 900 && rightReading < 900) {
-                        rotateAntiClockwise(50);
-                    }
-                    if (centerReading < 900 && leftReading < 900 && rightReading > 900) {
-                        rotateClockwise(50);
-                    }
-                }
+        if (centerReading > 900 && leftReading < 900 && centerReading < 900) {
+            moveForward(50);
+        } else {
+            if (centerReading < 900 && leftReading > 900 && rightReading < 900) {
+                rotateAntiClockwise(50);
             }
+            if (centerReading < 900 && leftReading < 900 && rightReading > 900) {
+                rotateClockwise(50);
+            }
+        }
+    }
 };
 
 // metodos envolvendo sensor de cor
@@ -421,7 +419,7 @@ int Robot::readTag() {
     if (raspy.available() > 0) {
         int aprilTag = raspy.parseInt(); // le mensagem recebida
         return aprilTag;
-    }  
+    }
 };
 
 char* Robot::checkConteinerColor() {
@@ -446,4 +444,4 @@ char* Robot::checkConteinerColor() {
     } else {
         Serial.println("Raspy nao enviou nada");
     }
-}; 
+};
