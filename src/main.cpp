@@ -70,6 +70,8 @@ void loop() {
         cube_counter++;
 
         Tortuga.moveBackward(400);
+        Tortuga.rotateAntiClockwise(562);
+        Tortuga.moveForward(250);
         
         break;
   // funcoes para cada rodada, vai ficar comentado por enquanto  

@@ -52,28 +52,28 @@ int Robot::cubePresence() {
 void Robot::getCube(int table_height) {
     // abre a garra
     clawServo.writeMicroseconds(1300); //1300
-    delay(1200);
+    delay(1500);
     clawServo.writeMicroseconds(1500); //1500
 
     if (table_height == 5) {
-        moveBackward(250);
+        moveBackward(300);
         moveRight(95);
         moveClawDown(34);
-        moveForward(100);
+        moveForward(200);
     }
 
     if (table_height == 10) {
-        moveBackward(250);
+        moveBackward(300);
         moveRight(95);
         moveClawDown(29);
-        moveForward(100);
+        moveForward(200);
     }
 
     if (table_height == 15) {
-        moveBackward(250);
+        moveBackward(300);
         moveRight(95);
         moveClawDown(24);
-        moveForward(100);
+        moveForward(200);
     }
 
     defaultClawPosition();
@@ -296,7 +296,7 @@ void Robot::checkForCube(int tableHeight) {
     }
 
     if (cubeFound == false) {
-        moveRight(distanceNotFound - 70);
+        moveRight(distanceNotFound - 90);
         while (1) {
             int frontDistance = usSensorFront.getDistance();
             moveRight(70);
