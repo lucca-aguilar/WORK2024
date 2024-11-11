@@ -32,48 +32,12 @@ void setup() {
 
 
 void loop() {
-  delay(1000);
-  
-// Serial.println("Entrou na função");
-    while(1) {
-        Serial.println("Entrou na função");
-        // variaveis globais
-        int table_height = 0;
-        int cube_counter = 0;
-        // Serial.println("Definiu variaveis");
-        // coloca a garra nas posicoes corretas
-        Tortuga.defaultClawPosition();
-        delay(1000);
-        //Serial.println("garra inicial");
-        while (1) { // anda ate encontrar a mesa
-            Tortuga.moveForward(150);
-
-            int front_distance = usSensorFront.getDistance();
-            Serial.println("sensorUS: " + front_distance);
-
-            if (front_distance <= 10) { // se alinha com a mesa
-                Serial.println("Sensor USF ativado");
-                Tortuga.motorsConfiguration(400, 400);
-                Tortuga.moveForward(70);
-                Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
-                break;
-            }
-        }
-        // verifica altura da mesa
-        table_height = Tortuga.checkTableHeight();
-
-        // escaneia em busca de um cubo
-        Tortuga.checkForCube(table_height);
-
-        // pega o cubo
-        Tortuga.getCube(table_height);
-        cube_counter++;
-
-        Tortuga.moveBackward(400);
-        Tortuga.rotateAntiClockwise(562);
-        Tortuga.moveForward(250);
-        
-        break;
+  Tortuga.moveForward(1200);
+  Tortuga.moveBackward(1200);
+  Tortuga.moveRight(1200);
+  Tortuga.moveLeft(1200);
+}
+ 
   // funcoes para cada rodada, vai ficar comentado por enquanto  
   /*
   int round = 1; // Altere o número da rodada conforme necessário
@@ -103,8 +67,38 @@ void loop() {
 
     delay(1000); // Pausa para evitar execuções muito rápidas
   */
-  }
-}
+
+
+// funcoes para cada rodada, vai ficar comentado por enquanto  
+  /*
+  int round = 1; // Altere o número da rodada conforme necessário
+
+    switch (round) {
+        case 1:
+            basicManipulationTestI();
+            break;
+        case 2:
+            basicTransportationTestI();
+            break;
+        case 3:
+            basicTransportationTestII();
+            break;
+        case 4:
+            advancedManipulationTest();
+        case 5:
+            advancedTransportationTestI();
+        case 6:
+            advancedTransportationTestII();
+        case 7:
+            finals();
+        default:
+            Serial.println("Rodada inválida.");
+            break;
+    }
+
+    delay(1000); // Pausa para evitar execuções muito rápidas
+  */
+
 
 // comentado - testes recorrentes
 /*

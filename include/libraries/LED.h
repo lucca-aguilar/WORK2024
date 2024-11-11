@@ -3,12 +3,14 @@
 
 class LED {
 public:
-    LED(int pin);
-    void on();
+    LED(int blue_pin, int red_pin);
+    void blue();
+    void red();
     void off();
     
 private:
-    int _pin;
+    int blue_pin;
+    int red_pin;
 };
 
 #endif

@@ -296,7 +296,7 @@ void Robot::checkForCube(int tableHeight) {
     }
 
     if (cubeFound == false) {
-        moveRight(distanceNotFound - 90);
+        moveRight(distanceNotFound - 100);
         while (1) {
             int frontDistance = usSensorFront.getDistance();
             moveRight(70);
@@ -355,7 +355,7 @@ void Robot::followLine(int activator) {
 };
 
 // metodos envolvendo sensor de cor
-char* Robot::checkCubeColor() {
+char Robot::checkCubeColor() {
     int red_value = clawSensor.colorRead('r', 20);
     int green_value = clawSensor.colorRead('g', 20);
     int blue_value = clawSensor.colorRead('b', 20);
@@ -365,11 +365,11 @@ char* Robot::checkCubeColor() {
     Serial.println(blue_value);
 
     if (red_value > blue_value && red_value > green_value) {
-        return "Vermelho";
+        return 'R';
     } else if (blue_value > red_value && blue_value > green_value) {
-        return "Azul";
+        return 'B';
     } else {
-        return "";
+        return ' ';
     }
 };
 

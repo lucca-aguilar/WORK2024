@@ -44,8 +44,7 @@
     Servo clawServo;
 
     // leds
-    LED blueLED(0);
-    LED redLED(0);
+    LED rgbLED(24, 22);
 
     // raspberry
     SoftwareSerial raspy(0, 0);
@@ -57,7 +56,7 @@
     MotorDC clawMotor(21, 20, 5, 0, 0);
 
     // robot
-    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, blueLED, redLED, raspy, clawBumper, clawMotor);
+    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, rgbLED, raspy, clawBumper, clawMotor);
 
 void start() {
     // configuracoes
