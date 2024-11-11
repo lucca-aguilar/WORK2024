@@ -201,7 +201,7 @@ int Robot::checkTableHeight() {
     3- move-se para a direita e realiza a leitura mais uma vez
     4- a altura e a media das tres alturas verificadas
     */
-    int irThreshold = 1010;
+    int irThreshold = 950;
     int tableHeight[3], sensorsReadings[4];
 
     for (int counter = 0; counter < 3; counter++) {
@@ -227,11 +227,15 @@ int Robot::checkTableHeight() {
         }
 
         if (counter == 0) {
-            moveLeft(200);
+            moveLeft(150);
         }
 
         if (counter == 1) {
-            moveRight(400);
+            if(usSensorRight.getDistance() >= 10){
+                moveRight(300);
+            }else{
+                moveRight(150);
+            }
         }
     }
 
@@ -252,7 +256,7 @@ void Robot::checkForCube(int tableHeight) {
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 1010;
+    int irThreshold = 950;
     int cubeFound = false;
     int distanceNotFound = 0;
 
@@ -329,7 +333,7 @@ void Robot::checkForCube(int tableHeight) {
                         break;
                     }
                 }
-                if (frontDistance < 10) {
+                if (frontDistance > 10) {
                     stop();
                     break;
                 }

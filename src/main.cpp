@@ -36,6 +36,7 @@ void loop() {
         // variaveis globais
         int table_height = 0;
         int cube_counter = 0;
+        
         // Serial.println("Definiu variaveis");
         // coloca a garra nas posicoes corretas
         Tortuga.defaultClawPosition();
@@ -63,6 +64,7 @@ void loop() {
 
         // pega o cubo
         Tortuga.getCube(table_height);
+
         char cube_color = Tortuga.checkCubeColor();
         if (cube_color == 'B') {
           rgbLED.blue();
