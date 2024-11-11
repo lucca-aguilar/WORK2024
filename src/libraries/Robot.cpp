@@ -201,7 +201,7 @@ int Robot::checkTableHeight() {
     3- move-se para a direita e realiza a leitura mais uma vez
     4- a altura e a media das tres alturas verificadas
     */
-    int irThreshold = 950;
+    int irThreshold = 1010;
     int tableHeight[3], sensorsReadings[4];
 
     for (int counter = 0; counter < 3; counter++) {
@@ -252,7 +252,7 @@ void Robot::checkForCube(int tableHeight) {
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 950;
+    int irThreshold = 1010;
     int cubeFound = false;
     int distanceNotFound = 0;
 
@@ -299,36 +299,40 @@ void Robot::checkForCube(int tableHeight) {
         moveRight(distanceNotFound - 100);
         while (1) {
             int frontDistance = usSensorFront.getDistance();
-            moveRight(70);
-            int topSensorReading;
-            if (tableHeight == 5) {
-                topSensorReading = irSensorTableHeight3.measureDistance();
-                if (topSensorReading < irThreshold) {
-                    stop();
-                    cubeFound = true;
-                    break;
+            int rightDistance = usSensorRight.getDistance();
+            if (rightDistance > 10) {
+                moveRight(70);
+                int topSensorReading;
+                if (tableHeight == 5) {
+                    topSensorReading = irSensorTableHeight3.measureDistance();
+                    if (topSensorReading < irThreshold) {
+                        stop();
+                        cubeFound = true;
+                        break;
+                    }
                 }
-            }
 
-            if (tableHeight == 10) {
-                topSensorReading = irSensorTableHeight2.measureDistance();
-                if (topSensorReading < irThreshold) {
-                    stop();
-                    cubeFound = true;
-                    break;
+                if (tableHeight == 10) {
+                    topSensorReading = irSensorTableHeight2.measureDistance();
+                    if (topSensorReading < irThreshold) {
+                        stop();
+                        cubeFound = true;
+                        break;
+                    }
                 }
-            }
 
-            if (tableHeight == 15) {
-                topSensorReading = irSensorTableHeight1.measureDistance();
-                if (topSensorReading < irThreshold) {
+                if (tableHeight == 15) {
+                    topSensorReading = irSensorTableHeight1.measureDistance();
+                    if (topSensorReading < irThreshold) {
+                        stop();
+                        cubeFound = true;
+                        break;
+                    }
+                }
+                if (frontDistance < 10) {
                     stop();
-                    cubeFound = true;
                     break;
                 }
-            }
-            if (frontDistance > 10) {
-                break;
             }
         }
     }

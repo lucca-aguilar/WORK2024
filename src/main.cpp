@@ -30,12 +30,55 @@ void setup() {
   Serial.println("Deu start");
 }
 
-
 void loop() {
-  Tortuga.moveForward(1200);
-  Tortuga.moveBackward(1200);
-  Tortuga.moveRight(1200);
-  Tortuga.moveLeft(1200);
+  while(1) {
+        Serial.println("Entrou na função");
+        // variaveis globais
+        int table_height = 0;
+        int cube_counter = 0;
+        // Serial.println("Definiu variaveis");
+        // coloca a garra nas posicoes corretas
+        Tortuga.defaultClawPosition();
+        delay(1000);
+        //Serial.println("garra inicial");
+        while (1) { // anda ate encontrar a mesa
+            Tortuga.moveForward(150);
+
+            int front_distance = usSensorFront.getDistance();
+            Serial.println("sensorUS: " + front_distance);
+
+            if (front_distance <= 10) { // se alinha com a mesa
+                Serial.println("Sensor USF ativado");
+                Tortuga.motorsConfiguration(400, 400);
+                Tortuga.moveForward(70);
+                Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+                break;
+            }
+        }
+        // verifica altura da mesa
+        table_height = Tortuga.checkTableHeight();
+
+        // escaneia em busca de um cubo
+        Tortuga.checkForCube(table_height);
+
+        // pega o cubo
+        Tortuga.getCube(table_height);
+        char cube_color = Tortuga.checkCubeColor();
+        if (cube_color == 'B') {
+          rgbLED.blue();
+          rgbLED.off();
+        } else {
+          rgbLED.red();
+          rgbLED.off();
+        }
+        cube_counter++;
+
+        Tortuga.moveBackward(400);
+        Tortuga.rotateAntiClockwise(562);
+        Tortuga.moveForward(250);
+        
+        break;
+    }
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
