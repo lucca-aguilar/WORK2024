@@ -426,22 +426,22 @@ int Robot::readTag() {
     }
 };
 
-char* Robot::checkConteinerColor() {
+char Robot::checkConteinerColor() {
     // envia comando para a raspy
-    raspy.println("Checar cor do conteiner");
+    raspy.println('C');
 
     if (raspy.available() > 0) {
-        String command = raspy.readString(); // le mensagem recebida
+        char color = raspy.read(); // le mensagem recebida
         delay(100);
 
-        if (command == "Vermelho") {
-            return "Vermelho";
+        if (color == 'R') {
+            return 'R';
             // para debugar
             Serial.println("Vermelho");
         }
 
-        if (command == "Azul") {
-            return "Azul";
+        if (color == 'B') {
+            return 'B';
             // para debugar
             Serial.println("Azul");
         }

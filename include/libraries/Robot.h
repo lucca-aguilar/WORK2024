@@ -80,7 +80,7 @@ public:
     int checkVirtualWall();
     int virtualWallDistance();
     int readTag();
-    char* checkConteinerColor(); 
+    char checkConteinerColor(); 
 
 };
 
