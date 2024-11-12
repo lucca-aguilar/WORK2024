@@ -49,7 +49,7 @@ int Robot::cubePresence() {
     }
 };
 
-void Robot::getCube(int table_height) {
+void Robot::getCubeFront(int table_height) {
     // abre a garra
     clawServo.writeMicroseconds(1300); //1300
     delay(1500);
@@ -77,6 +77,11 @@ void Robot::getCube(int table_height) {
     }
 
     defaultClawPosition();
+
+    while(usSensorFront.getDistance() < 10){
+        moveLeft(70);
+    }
+    moveLeft(300);
 };
 
 // metodos envolvendo motores de passo (movimentacao)
@@ -193,7 +198,7 @@ void Robot::defaultClawPosition() {
 };
 
 // metodos envolvendo sensores
-int Robot::checkTableHeight() {
+int Robot::checkTableHeightFront() {
 
     /*para descobrir a altura de uma mesa, ja estando em frente a ela, o robo realiza os seguintes passos:
     1- realiza a leitura dos sensores no ponto "central" 
@@ -231,7 +236,7 @@ int Robot::checkTableHeight() {
         }
 
         if (counter == 1) {
-            moveRight(400);
+            moveRight(300);
         }
     }
 
@@ -246,7 +251,123 @@ int Robot::checkTableHeight() {
     return smallerTableHeight;
 };
 
-void Robot::checkForCube(int tableHeight) {
+int Robot::checkTableHeightBack() {
+
+    /*para descobrir a altura de uma mesa, ja estando em frente a ela, o robo realiza os seguintes passos:
+    1- realiza a leitura dos sensores no ponto "central" 
+    2- move-se para a esquerda e realiza a leitura novamente
+    3- move-se para a direita e realiza a leitura mais uma vez
+    4- a altura e a media das tres alturas verificadas
+    */
+    int irThreshold = 950;
+    int tableHeight[3], sensorsReadings[4];
+
+    for (int counter = 0; counter < 3; counter++) {
+        // leituras dos sensores infravermelho
+        sensorsReadings[0] = 0;
+        sensorsReadings[1] = 0;
+        sensorsReadings[2] = 0;
+        sensorsReadings[3] = 0;
+
+        sensorsReadings[0] = irSensorTableHeight1.measureDistance();
+        sensorsReadings[1] = irSensorTableHeight2.measureDistance();
+        sensorsReadings[2] = irSensorTableHeight3.measureDistance();
+        sensorsReadings[3] = irSensorTableHeight4.measureDistance();
+
+        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
+            tableHeight[counter] = 5;
+        }
+        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
+            tableHeight[counter] = 10;
+        }
+        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] < irThreshold && sensorsReadings[0] > irThreshold) {
+            tableHeight[counter] = 15;
+        }
+
+        if (counter == 0) {
+            moveRight(200);
+        }
+
+        if (counter == 1) {
+            moveLeft(300);
+        }
+    }
+
+    int smallerTableHeight = 15;
+    for (int i = 0; i < 3; i++) {
+        if (tableHeight[i] <= smallerTableHeight) {
+            smallerTableHeight = tableHeight[i];
+        }
+    }
+    Serial.println("Table height:");
+    Serial.println(smallerTableHeight);
+    return smallerTableHeight;
+};
+
+
+boolean Robot::checkForCubeFront(int tableHeight) {
+    /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
+    1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
+    2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
+    3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
+    */
+    int irThreshold = 950;
+    int cubeFound = false;
+    
+    while(1){
+        int rightDistance = usSensorRight.getDistance();
+        if(rightDistance > 5){
+            moveRight(70);
+        }else{
+            stop();
+            break;
+        }
+    }
+
+    while(1){
+        int topSensorReading;
+        moveLeft(70);
+
+        if(tableHeight == 5){
+            topSensorReading = irSensorTableHeight3.measureDistance();
+            if(topSensorReading <= irThreshold){
+                stop();
+                cubeFound = true;
+                return cubeFound;
+            }
+        }
+
+        if(tableHeight == 10){
+            topSensorReading = irSensorTableHeight2.measureDistance();
+            if(topSensorReading <= irThreshold){
+                stop();
+                cubeFound = true;
+                return cubeFound;
+            }
+        }
+
+        if(tableHeight == 15){
+            topSensorReading = irSensorTableHeight1.measureDistance();
+            if(topSensorReading <= irThreshold){
+                stop();
+                cubeFound = true;
+                return cubeFound;
+            }
+        }
+
+        if(usSensorFront.getDistance() > 10){
+            stop();
+            return cubeFound;
+            break;
+        }
+
+    }
+
+
+};
+
+
+boolean Robot::checkForCubeBack(int tableHeight) {
     /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
     1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
@@ -259,7 +380,7 @@ void Robot::checkForCube(int tableHeight) {
     if (cubeFound == false) {
         while (1) {
             int frontDistance = usSensorFront.getDistance();
-            moveLeft(70);
+            moveRight(70);
             int topSensorReading;
             if (tableHeight == 5) {
                 topSensorReading = irSensorTableHeight3.measureDistance();
@@ -296,12 +417,11 @@ void Robot::checkForCube(int tableHeight) {
     }
 
     if (cubeFound == false) {
-        moveRight(distanceNotFound - 100);
+        moveLeft(distanceNotFound - 100);
         while (1) {
-            int frontDistance = usSensorFront.getDistance();
-            int rightDistance = usSensorRight.getDistance();
-            if (rightDistance > 10) {
-                moveRight(70);
+            int leftDistance = usSensorLeft.getDistance();
+            if (leftDistance > 5) {
+                moveLeft(70);
                 int topSensorReading;
                 if (tableHeight == 5) {
                     topSensorReading = irSensorTableHeight3.measureDistance();
@@ -329,13 +449,12 @@ void Robot::checkForCube(int tableHeight) {
                         break;
                     }
                 }
-                if (frontDistance < 10) {
-                    stop();
-                    break;
-                }
+            } else {
+                break;
             }
         }
     }
+    return cubeFound;
 };
 
 // metodos dos sensores infravermelhos de segue linha

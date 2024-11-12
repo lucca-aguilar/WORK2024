@@ -17,36 +17,44 @@ void basicManipulationTest() {
             Tortuga.moveForward(150);
             int front_distance = usSensorFront.getDistance();
             if (front_distance <= 10) { // se alinha com a mesa
-                Tortuga.motorsConfiguration(400, 400);
-                Tortuga.moveForward(70);
+                Tortuga.motorsConfiguration(300, 300);
+                Tortuga.moveForward(100);
                 Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
                 break;
             }
         }
         Serial.println("encontrou a mesa");
         // verifica altura da mesa
-        int table_height = Tortuga.checkTableHeight();
+        int table_height = Tortuga.checkTableHeightFront();
 
         // escaneia em busca de um cubo
-        Tortuga.checkForCube(table_height);
+        boolean cubeFound = Tortuga.checkForCubeFront(table_height);
 
-        // pega o cubo
-        Tortuga.getCube(table_height);
-
-        char cube_color = Tortuga.checkCubeColor();
-        if (cube_color == 'B') {
-          rgbLED.blue();
-          rgbLED.off();
-        } else {
-          rgbLED.red();
-          rgbLED.off();
+        if(cubeFound){
+          Tortuga.getCubeFront(table_height); //confirmacao que pegou o cubo
+          char cube_color = Tortuga.checkCubeColor();
+          if (cube_color == 'B') {
+            rgbLED.blue();
+            rgbLED.off();
+          } else {
+            rgbLED.red();
+            rgbLED.off();
+          }
+          cube_counter++;
         }
-        cube_counter++;
 
-        Tortuga.moveBackward(400);
-        Tortuga.rotateAntiClockwise(562);
-        Tortuga.moveForward(250);
-
+        if(!cubeFound){ // procura na parte de trás da mesa
+          Tortuga.moveLeft(500);
+          Tortuga.moveForward(1200);
+          Tortuga.rotateClockwise(1225);
+          Tortuga.moveLeft(500);
+          cubeFound = Tortuga.checkForCubeBack(table_height);
+          if(cubeFound){
+            Tortuga.getCubeFront(table_height); //getcubeBack
+            Tortuga.moveForward(1200);
+            Tortuga.rotateClockwise(562);
+          }
+        }
         break;
     }
 }

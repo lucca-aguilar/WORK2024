@@ -46,7 +46,7 @@ public:
     void serialConfiguration();
 
     // metodos mais gerais???
-    void getCube(int table_height);
+    void getCubeFront(int table_height);
     int cubePresence();
     void motorsConfiguration(int velocity, int acceleration);
 
@@ -67,8 +67,10 @@ public:
     void defaultClawPosition();
 
     // metodos dos sensores infravermelhos da torre
-    int checkTableHeight();
-    void checkForCube(int tableHeight);
+    int checkTableHeightFront();
+    int checkTableHeightBack();
+    boolean checkForCubeFront(int tableHeight);
+    boolean checkForCubeBack(int tableHeight);
 
     // metodos dos sensores infravermelhos segue linha
     void followLine(int activator);
