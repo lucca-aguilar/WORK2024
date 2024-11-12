@@ -112,11 +112,16 @@ void Robot::getCubeBack(int table_height) {
     }
 
     defaultClawPosition();
-
-    while(usSensorFront.getDistance() < 10){
+    
+    while(1){
+        int frontDistance = usSensorFront.getDistance();
         moveRight(70);
+        if(frontDistance > 10){
+            moveRight(400);
+            stop();
+            break;
+        }
     }
-    moveRight(400);
 };
 
 // metodos envolvendo motores de passo (movimentacao)
@@ -340,18 +345,18 @@ int Robot::checkTableHeightBack() {
 };
 
 
-boolean Robot::checkForCubeFront(int tableHeight) {
+int Robot::checkForCubeFront(int tableHeight) {
     /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
     1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
     int irThreshold = 950;
-    int cubeFound = false;
+    boolean cubeFound = 0;
     
     while(1){
         int rightDistance = usSensorRight.getDistance();
-        if(rightDistance > 5){
+        if(rightDistance >= 5){
             moveRight(70);
         }else{
             stop();
@@ -367,7 +372,7 @@ boolean Robot::checkForCubeFront(int tableHeight) {
             topSensorReading = irSensorTableHeight3.measureDistance();
             if(topSensorReading <= irThreshold){
                 stop();
-                cubeFound = true;
+                cubeFound = 1;
                 return cubeFound;
             }
         }
@@ -376,7 +381,7 @@ boolean Robot::checkForCubeFront(int tableHeight) {
             topSensorReading = irSensorTableHeight2.measureDistance();
             if(topSensorReading <= irThreshold){
                 stop();
-                cubeFound = true;
+                cubeFound = 1;
                 return cubeFound;
             }
         }
@@ -385,12 +390,12 @@ boolean Robot::checkForCubeFront(int tableHeight) {
             topSensorReading = irSensorTableHeight1.measureDistance();
             if(topSensorReading <= irThreshold){
                 stop();
-                cubeFound = true;
+                cubeFound = 1;
                 return cubeFound;
             }
         }
-
-        if(usSensorFront.getDistance() > 10){
+        int frontDistance = usSensorFront.getDistance();
+        if(frontDistance > 10){
             stop();
             return cubeFound;
             break;
@@ -399,11 +404,11 @@ boolean Robot::checkForCubeFront(int tableHeight) {
 };
 
 
-boolean Robot::checkForCubeBack(int tableHeight) {
+int Robot::checkForCubeBack(int tableHeight) {
     int irThreshold = 950;
-    int cubeFound = false;
+    int cubeFound = 0;
 
-    if (cubeFound == false) {
+    if (cubeFound == 0) {
         while (1) {
             int leftDistance = usSensorLeft.getDistance();
             moveLeft(70);
@@ -413,7 +418,8 @@ boolean Robot::checkForCubeBack(int tableHeight) {
                 topSensorReading = irSensorTableHeight3.measureDistance();
                 if (topSensorReading < irThreshold) {
                     stop();
-                    cubeFound = true;
+                    cubeFound = 1;
+                    return cubeFound;
                     break;
                 }
             }
@@ -422,7 +428,8 @@ boolean Robot::checkForCubeBack(int tableHeight) {
                 topSensorReading = irSensorTableHeight2.measureDistance();
                 if (topSensorReading < irThreshold) {
                     stop();
-                    cubeFound = true;
+                    cubeFound = 1;
+                    return cubeFound;
                     break;
                 }
             }
@@ -431,12 +438,13 @@ boolean Robot::checkForCubeBack(int tableHeight) {
                 topSensorReading = irSensorTableHeight1.measureDistance();
                 if (topSensorReading < irThreshold) {
                     stop();
-                    cubeFound = true;
+                    cubeFound = 1;
+                    return cubeFound;
                     break;
                 }
             }
 
-            if (leftDistance <= 5) {
+            if (leftDistance <= 10) {
                 return cubeFound;
                 break;
             }

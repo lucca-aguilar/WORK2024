@@ -70,8 +70,8 @@ public:
     // metodos dos sensores infravermelhos da torre
     int checkTableHeightFront();
     int checkTableHeightBack();
-    boolean checkForCubeFront(int tableHeight);
-    boolean checkForCubeBack(int tableHeight);
+    int checkForCubeFront(int tableHeight);
+    int checkForCubeBack(int tableHeight);
 
     // metodos dos sensores infravermelhos segue linha
     void followLine(int activator);
