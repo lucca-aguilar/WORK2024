@@ -24,6 +24,7 @@ extern AccelStepper motor4;
 extern UltrasonicSensor usSensorFront;
 extern UltrasonicSensor usSensorRight;
 extern UltrasonicSensor usSensorLeft;
+extern UltrasonicSensor usSensorTable;
 extern InfraredSensor irSensorLFR;
 extern InfraredSensor irSensorLFC;
 extern InfraredSensor irSensorLFL;

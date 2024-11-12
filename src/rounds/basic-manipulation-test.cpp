@@ -77,7 +77,7 @@ void basicManipulationTest() {
             }
             cube_counter++;
 
-          }else{
+          }else{ // ir embora 
             while(1){
               int distanceFrente = usSensorFront.getDistance();
               Tortuga.moveRight(70);

@@ -28,10 +28,11 @@ void setup() {
   Serial.println("Entrou na setup");
   start();
   Serial.println("Deu start");
+  Tortuga.moveRight(50);
 }
 
 void loop() {
-  int distance = usSensorTable.measureDistance();
+  
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

@@ -22,7 +22,6 @@
     AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
     // sensores ultrassônicos
-    //UltrasonicSensor usSensorFront(39, 41);
     UltrasonicSensor usSensorFront(39, 41);
     UltrasonicSensor usSensorRight(31, 33);
     UltrasonicSensor usSensorLeft(37, 35);
