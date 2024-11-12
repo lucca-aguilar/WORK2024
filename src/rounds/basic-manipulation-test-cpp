@@ -27,7 +27,7 @@ void basicManipulationTest() {
         // verifica altura da mesa
         int table_height = Tortuga.checkTableHeightFront();
 
-        // escaneia em busca de um cubo
+        // escaneia em busca de um cubo pela frente
         boolean cubeFound = Tortuga.checkForCubeFront(table_height);
 
         if(cubeFound){
@@ -46,13 +46,27 @@ void basicManipulationTest() {
         if(!cubeFound){ // procura na parte de trás da mesa
           Tortuga.moveLeft(500);
           Tortuga.moveForward(1200);
-          Tortuga.rotateClockwise(1225);
+          Tortuga.rotateClockwise(562);
           Tortuga.moveLeft(500);
+
           cubeFound = Tortuga.checkForCubeBack(table_height);
+
           if(cubeFound){
-            Tortuga.getCubeFront(table_height); //getcubeBack
+            Tortuga.getCubeBack(table_height); //getcubeBack
+            char cube_color = Tortuga.checkCubeColor();
+            if (cube_color == 'B') {
+              rgbLED.blue();
+              rgbLED.off();
+            } else {
+              rgbLED.red();
+              rgbLED.off();
+            }
+            cube_counter++;
+
             Tortuga.moveForward(1200);
             Tortuga.rotateClockwise(562);
+          }else{
+            // cubeNotfound
           }
         }
         break;

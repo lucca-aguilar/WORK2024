@@ -47,6 +47,7 @@ public:
 
     // metodos mais gerais???
     void getCubeFront(int table_height);
+    void getCubeBack(int table_height);
     int cubePresence();
     void motorsConfiguration(int velocity, int acceleration);
 
