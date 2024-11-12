@@ -67,6 +67,7 @@ public:
     void moveClawUp(int dc_dislocation);
     void moveClawDown(int dc_dislocation);
     void defaultClawPosition();
+    void placeCube();
 
     // metodos dos sensores infravermelhos da torre
     int checkTableHeightFront();

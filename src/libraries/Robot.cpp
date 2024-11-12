@@ -58,21 +58,21 @@ void Robot::getCubeFront(int table_height) {
     if (table_height == 5) {
         moveBackward(300);
         moveRight(100);
-        moveClawDown(33);
+        moveClawDown(34);
         moveForward(200);
     }
 
     if (table_height == 10) {
         moveBackward(300);
         moveRight(100);
-        moveClawDown(28);
+        moveClawDown(29);
         moveForward(200);
     }
 
     if (table_height == 15) {
         moveBackward(300);
         moveRight(100);
-        moveClawDown(23);
+        moveClawDown(24);
         moveForward(200);
     }
 
@@ -574,3 +574,13 @@ char Robot::checkConteinerColor() {
         Serial.println("Raspy nao enviou nada");
     }
 };
+
+
+void Robot::placeCube(){
+    moveClawDown(10);
+    clawServo.writeMicroseconds(1300);
+    delay(1200);
+    clawServo.writeMicroseconds(1500);
+    
+    defaultClawPosition();
+}

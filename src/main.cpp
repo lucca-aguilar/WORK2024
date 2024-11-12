@@ -28,7 +28,6 @@ void setup() {
   Serial.println("Entrou na setup");
   start();
   Serial.println("Deu start");
-  Tortuga.moveRight(50);
 }
 
 void loop() {
