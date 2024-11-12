@@ -58,21 +58,21 @@ void Robot::getCubeFront(int table_height) {
     if (table_height == 5) {
         moveBackward(300);
         moveRight(100);
-        moveClawDown(34);
+        moveClawDown(33);
         moveForward(200);
     }
 
     if (table_height == 10) {
         moveBackward(300);
         moveRight(100);
-        moveClawDown(29);
+        moveClawDown(28);
         moveForward(200);
     }
 
     if (table_height == 15) {
         moveBackward(300);
         moveRight(100);
-        moveClawDown(24);
+        moveClawDown(23);
         moveForward(200);
     }
 
@@ -92,21 +92,21 @@ void Robot::getCubeBack(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(100);
+        moveRight(105);
         moveClawDown(34);
         moveForward(200);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(100);
+        moveRight(105);
         moveClawDown(29);
         moveForward(200);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(100);
+        moveRight(105);
         moveClawDown(24);
         moveForward(200);
     }
@@ -356,7 +356,7 @@ int Robot::checkForCubeFront(int tableHeight) {
     
     while(1){
         int rightDistance = usSensorRight.getDistance();
-        if(rightDistance >= 5){
+        if(rightDistance >= 7){
             moveRight(70);
         }else{
             stop();
