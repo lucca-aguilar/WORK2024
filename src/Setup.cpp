@@ -26,6 +26,7 @@
     UltrasonicSensor usSensorFront(39, 41);
     UltrasonicSensor usSensorRight(31, 33);
     UltrasonicSensor usSensorLeft(37, 35);
+    UltrasonicSensor usSensorTable(38, 40);
 
     // sensores infravermelho
     InfraredSensor irSensorLFL(11, 0);  //lineFollowerLeft if1
@@ -56,7 +57,7 @@
     MotorDC clawMotor(21, 20, 5, 0, 0);
 
     // robot
-    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, rgbLED, raspy, clawBumper, clawMotor);
+    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, usSensorTable, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, rgbLED, raspy, clawBumper, clawMotor);
 
 void start() {
     // configuracoes

@@ -387,18 +387,22 @@ int Robot::checkForCubeFront(int tableHeight) {
         }
 
         if(tableHeight == 15){
-            topSensorReading = irSensorTableHeight1.measureDistance();
-            if(topSensorReading <= irThreshold){
+            topSensorReading = usSensorTable.getDistance();
+            if (topSensorReading <= 20) {
                 stop();
                 cubeFound = 1;
                 return cubeFound;
             }
+            /*topSensorReading = irSensorTableHeight1.measureDistance();
+            if(topSensorReading <= irThreshold){
+                stop();
+                cubeFound = 1;
+                return cubeFound;}*/
         }
         int frontDistance = usSensorFront.getDistance();
         if(frontDistance > 10){
             stop();
             return cubeFound;
-            break;
         }
     }
 };
@@ -435,13 +439,20 @@ int Robot::checkForCubeBack(int tableHeight) {
             }
 
             if (tableHeight == 15) {
-                topSensorReading = irSensorTableHeight1.measureDistance();
+
+                topSensorReading = usSensorTable.getDistance();
+                if (topSensorReading <= 20) {
+                    stop();
+                    cubeFound = 1;
+                    return cubeFound;
+                }
+
+                /*topSensorReading = irSensorTableHeight1.measureDistance();
                 if (topSensorReading < irThreshold) {
                     stop();
                     cubeFound = 1;
                     return cubeFound;
-                    break;
-                }
+                    break;}*/
             }
 
             if (leftDistance <= 10) {

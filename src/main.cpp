@@ -31,7 +31,7 @@ void setup() {
 }
 
 void loop() {
-  basicManipulationTest();
+  int distance = usSensorTable.measureDistance();
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
