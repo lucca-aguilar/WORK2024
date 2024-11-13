@@ -70,8 +70,8 @@ public:
     // metodos dos sensores infravermelhos da torre
     int checkTableHeightFront();
     int checkTableHeightBack();
-    int checkForCubeFront(int tableHeight);
-    int checkForCubeBack(int tableHeight);
+    int checkForCubeFront(int tableHeight, int ir1);
+    int checkForCubeBack(int tableHeight, int ir1);
 
     // metodos envolvendo sensor de cor
     char checkCubeColor();

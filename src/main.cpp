@@ -31,7 +31,21 @@ void setup() {
 }
 
 void loop() {
-  basicTransportationTestI();
+  delay(1000);
+  int distanceIR1 = irSensorTableHeight1.measureDistance();
+   int distanceIR2 = irSensorTableHeight2.measureDistance();
+   int distanceIR3 = irSensorTableHeight3.measureDistance();
+   int distanceIR4 = irSensorTableHeight4.measureDistance();
+
+   Serial.print("Ir1 =");
+   Serial.println(distanceIR1);
+   Serial.print("Ir2 =");
+   Serial.println(distanceIR2);
+   Serial.print("Ir3 =");
+   Serial.println(distanceIR3);
+   Serial.print("Ir4 =");
+   Serial.println(distanceIR4);
+   Serial.println(".");
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

@@ -205,7 +205,7 @@ void Robot::moveClawUp(int dc_dislocation) {
 
 void Robot::moveClawDown(int dc_dislocation) {
     int dc_time = 0;
-    dc_time = ((dc_dislocation + 9 - 1.5375) / 4.5) * 1000;
+    dc_time = ((dc_dislocation + 7 - 1.5375) / 4.5) * 1000;
     Serial.println(dc_time);
     clawMotor.moveBackward(255);
     delay(dc_time);
@@ -301,13 +301,17 @@ int Robot::checkTableHeightFront() {
     return smallerTableHeight;
 };
 
-int Robot::checkForCubeFront(int tableHeight) {
+int Robot::checkForCubeFront(int tableHeight, int ir1) {
     /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
     1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 965;
+    int irThreshold = ir1 - (0.05 * ir1);
+    Serial.println("IR:");
+    Serial.println(ir1);
+    Serial.println("Limite:");
+    Serial.println(irThreshold);
     int cubeFound = 0;
     
     while(1){
@@ -360,13 +364,13 @@ int Robot::checkForCubeFront(int tableHeight) {
     }
 };
 
-int Robot::checkForCubeBack(int tableHeight) {
+int Robot::checkForCubeBack(int tableHeight, int ir1) {
     /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
     1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 965;
+    int irThreshold = ir1 - (0.05 * ir1);
     int cubeFound = 0;
     
     while(1){

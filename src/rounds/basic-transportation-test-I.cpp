@@ -69,6 +69,7 @@ void basicTransportationTestI() {
     // variáveis globais
     int cube_counter = 0;
     int cube_found = 0;
+    int ir1 = irSensorTableHeight1.measureDistance();
 
     while(1) {
         // coloca a garra nas posicoes corretas
@@ -90,7 +91,7 @@ void basicTransportationTestI() {
         int table_height = Tortuga.checkTableHeightFront();
 
         // procura por cubos na frente
-        cube_found = Tortuga.checkForCubeFront(table_height);
+        cube_found = Tortuga.checkForCubeFront(table_height, ir1);
         if (cube_found == 1) {
             Tortuga.getCubeFront(table_height);
             cube_counter++;
@@ -105,7 +106,7 @@ void basicTransportationTestI() {
             goToLineFront();
         } else {
             goToTableBack();
-            cube_found = Tortuga.checkForCubeBack(table_height);
+            cube_found = Tortuga.checkForCubeBack(table_height, ir1);
             if (cube_found == 1) {
                 Tortuga.getCubeBack(table_height);
                 cube_counter++;
@@ -124,10 +125,10 @@ void basicTransportationTestI() {
                 Tortuga.moveForward(3000);
                 Tortuga.rotateClockwise(562);
                 Tortuga.moveForward(3000);
-                Tortuga.rotateAntiClockwise(20);
-                Tortuga.moveForward(1200);
+                Tortuga.rotateAntiClockwise(30);
+                Tortuga.moveForward(2500);
                 Tortuga.rotateAntiClockwise(562);
-                Tortuga.moveForward(2000);
+                Tortuga.moveForward(2700);
                 delay(15000);
             }
         }
@@ -138,18 +139,12 @@ void basicTransportationTestI() {
         // coloca o cubo na pilha
         int height = defineHeight(cube_counter);
         Tortuga.placeCube(height);
-        //voltar para mesa
-        Tortuga.moveBackward(700);
-        Tortuga.rotateClockwise(562);
-        Tortuga.moveForward(300);
-        while(1) {
-            Tortuga.moveForward(70);
-            char floor_color = Tortuga.checkFloorColor();
-            if (floor_color == 'B') {
-                Tortuga.stop();
-                break;
-            }
-        }   
-
+        
+        // volta para a mesa
+        Tortuga.rotateClockwise(1124);
+        Tortuga.moveForward(3000);
+        Tortuga.moveRight(3000);
+        Tortuga.moveRight(700);
+        Tortuga.rotateAntiClockwise(562);
     }
 }
