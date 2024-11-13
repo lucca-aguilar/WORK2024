@@ -31,7 +31,7 @@ void setup() {
 }
 
 void loop() {
-  basicManipulationTest();
+  basicTransportationTestI();
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

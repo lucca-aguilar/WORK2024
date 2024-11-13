@@ -1,28 +1,135 @@
 #include <basic-transportation-test-I.h>
 #include <Setup.h>
 
+// definições de algumas funções úteis
+void goToTableBack() {
+    Tortuga.moveLeft(850);
+    Tortuga.moveForward(1800);
+    Tortuga.rotateClockwise(1110);
+}
+
+void goToLineFront() {
+    Tortuga.moveLeft(600);
+    Tortuga.rotateAntiClockwise(1124);
+    while(1) {
+        Tortuga.moveForward(70);
+        char floor_color = Tortuga.checkFloorColor();
+        if (floor_color == 'B') {
+            Tortuga.stop();
+            break;
+        }
+    }
+}
+
+void goToLineBack() {
+    Tortuga.moveRight(300);
+    while(1) {
+        Tortuga.moveForward(70);
+        char floor_color = Tortuga.checkFloorColor();
+        if (floor_color == 'B') {
+            Tortuga.stop();
+            break;
+        }
+    }
+}
+
+void goToStackingZone() {
+    Tortuga.moveBackward(500);
+    Tortuga.rotateClockwise(562);
+    while(1) {
+        Tortuga.moveForward(70);
+        char floor_color = Tortuga.checkFloorColor();
+        if (floor_color == 'B') {
+            Tortuga.stop();
+            break;
+        }
+    }
+}
+
+int defineHeight(int cube_counter) {
+    int height;
+    if (cube_counter == 1) {
+        return 5;
+    } 
+
+    if (cube_counter == 2) {
+        return 10;
+    }
+
+    if (cube_counter == 3) {
+        return 15;
+    }
+
+    if (cube_counter == 4) {
+        return 20;
+    }
+}
+
 void basicTransportationTestI() {
     // variáveis globais
+    int cube_counter = 0;
+    int cube_found = 0;
 
-    // anda até encontrar a mesa
+    while(1) {
+        // coloca a garra nas posicoes corretas
+        Tortuga.defaultClawPosition();
 
-    // se alinha
+        // anda até encontrar a mesa
+        while(1) {
+            Tortuga.moveForward(150);
+            int front_distance = usSensorFront.getDistance();
+            if (front_distance <= 5) { // se alinha com a mesa
+                Tortuga.motorsConfiguration(300, 300);
+                Tortuga.moveForward(30);
+                Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+                break;
+            }
+        }
 
-    // verifica a altura da mesa
+        // verifica a altura da mesa
+        int table_height = Tortuga.checkTableHeightFront();
 
-    // procura por cubos na frente
-        // se encontrou cubo na frente, pega e verifica se pegou
-            // se não pegou, tenta novamente
-            // se pegou, aumenta o contador
-        // se não encontrou cubo na frente, vai para a parte de trás e atualiza que não há cubo na frente
-        // procura por cubos atrás
-            // se encontrou cubos atrás, pega e verifica se pegou
-                // se não pegou, tenta novamente
-                // se pegou, aumenta o contador
-            // se não encontrou cubos atrás, vai embora e acaba o código END!
+        // procura por cubos na frente
+        cube_found = Tortuga.checkForCubeFront(table_height);
+        if (cube_found == 1) {
+            Tortuga.getCubeFront(table_height);
+            cube_counter++;
+            while(1){
+                Tortuga.moveLeft(70);
+                int FrontDistance = usSensorFront.getDistance();
+                if(FrontDistance > 15){
+                    Tortuga.moveLeft(400);
+                    break;
+                }
+            }
+            goToLineFront();
+        } else {
+            goToTableBack();
+            cube_found = Tortuga.checkForCubeBack(table_height);
+            if (cube_found == 1) {
+                Tortuga.getCubeBack(table_height);
+                cube_counter++;
+
+                while(1){
+                Tortuga.moveRight(70);
+                int FrontDistance = usSensorFront.getDistance();
+                if(FrontDistance > 15){
+                    Tortuga.moveRight(400);
+                    break;
+                }
+            }
+                goToLineBack();
+            } else {
+                // finaliza a rodada
+            }
+        }
+
         // vai para a zona de empilhamento
-        // verifica quando o chão é azul
-        // desce a garra para colocar o cubo de acordo com o contador
-        // retorna para a mesa 
-    
+        goToStackingZone();
+
+        // coloca o cubo na pilha
+        int height = defineHeight(cube_counter);
+        Tortuga.placeCube(height);
+        Serial.println("Por agora é isso\n");
+    }
 }

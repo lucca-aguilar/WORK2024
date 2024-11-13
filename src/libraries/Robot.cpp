@@ -223,6 +223,14 @@ void Robot::defaultClawPosition() {
     delay(8000);
 };
 
+void Robot::placeCube(int height){
+    moveClawDown(39 - height);
+    clawServo.writeMicroseconds(1300);
+    delay(1200);
+    clawServo.writeMicroseconds(1500);
+    defaultClawPosition();
+};
+
 // metodos envolvendo sensores
 int Robot::checkTableHeightFront() {
 
@@ -232,7 +240,7 @@ int Robot::checkTableHeightFront() {
     3- move-se para a direita e realiza a leitura mais uma vez
     4- a altura e a media das tres alturas verificadas
     */
-    int irThreshold = 950;
+    int irThreshold = 970;
     int tableHeight[3], sensorsReadings[4];
 
     for (int counter = 0; counter < 3; counter++) {
@@ -246,6 +254,12 @@ int Robot::checkTableHeightFront() {
         sensorsReadings[1] = irSensorTableHeight2.measureDistance();
         sensorsReadings[2] = irSensorTableHeight3.measureDistance();
         sensorsReadings[3] = irSensorTableHeight4.measureDistance();
+
+        Serial.println(irSensorTableHeight1.measureDistance());
+        Serial.println(irSensorTableHeight2.measureDistance());
+        Serial.println(irSensorTableHeight3.measureDistance());
+        Serial.println(irSensorTableHeight4.measureDistance());
+        Serial.println(".");
 
         if (sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
             tableHeight[counter] = 5;
@@ -283,7 +297,7 @@ int Robot::checkForCubeFront(int tableHeight) {
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 1000;
+    int irThreshold = 965;
     int cubeFound = 0;
     
     while(1){
@@ -342,7 +356,7 @@ int Robot::checkForCubeBack(int tableHeight) {
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 1000;
+    int irThreshold = 965;
     int cubeFound = 0;
     
     while(1){
@@ -511,12 +525,3 @@ char Robot::checkConteinerColor() {
         return 'N';  // 'N' para indicar ausência de resposta
     }
 };
-
-void Robot::placeCube(){
-    moveClawDown(10);
-    clawServo.writeMicroseconds(1300);
-    delay(1200);
-    clawServo.writeMicroseconds(1500);
-    
-    defaultClawPosition();
-}

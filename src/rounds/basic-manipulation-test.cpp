@@ -142,7 +142,7 @@ void basicManipulationTest() {
           if(containerdistance < 950){
             char conteiner = Tortuga.checkConteinerColor();
             if(conteiner == cube_color){
-              Tortuga.placeCube();
+              Tortuga.placeCube(20);
               while(1){
                 Tortuga.moveRight(70);
                 int frontdistance = usSensorFront.getDistance();
@@ -163,7 +163,7 @@ void basicManipulationTest() {
                   Tortuga.stop();
                   char conteiner = Tortuga.checkConteinerColor();
                   if(conteiner == cube_color){
-                    Tortuga.placeCube();
+                    Tortuga.placeCube(20);
                     while(1){
                       Tortuga.moveRight(70);
                       int frontdistance = usSensorFront.getDistance();
