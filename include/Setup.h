@@ -25,14 +25,12 @@ extern UltrasonicSensor usSensorFront;
 extern UltrasonicSensor usSensorRight;
 extern UltrasonicSensor usSensorLeft;
 extern UltrasonicSensor usSensorTable;
-extern InfraredSensor irSensorLFR;
-extern InfraredSensor irSensorLFC;
-extern InfraredSensor irSensorLFL;
 extern InfraredSensor irSensorTableHeight1;
 extern InfraredSensor irSensorTableHeight2;
 extern InfraredSensor irSensorTableHeight3;
 extern InfraredSensor irSensorTableHeight4;
 extern ColorSensor clawSensor;
+extern ColorSensor floorSensor;
 extern Servo clawServo;
 extern LED rgbLED;
 extern SoftwareSerial raspy;
@@ -43,4 +41,4 @@ extern Robot Tortuga;
 // Função de configuração
 void start();
 
-#endif // SETUP_H
+#endif 

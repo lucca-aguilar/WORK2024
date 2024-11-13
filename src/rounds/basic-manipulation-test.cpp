@@ -2,17 +2,17 @@
 #include <Setup.h>
 
 void basicManipulationTest() {
+    // declara algumas variaveis globais
     int cube_counter = 0;
+    char cube_color;
     Serial.println("Entrou na função");
-    while(true) {
-        // variaveis globais
-        Serial.println("Definiu variaveis");
 
+    while(1) {
         // coloca a garra nas posicoes corretas
         Tortuga.defaultClawPosition();
         Serial.println("garra inicial");
 
-        while (true) { // anda ate encontrar a mesa
+        while(1) { // anda ate encontrar a mesa
             Tortuga.moveForward(150);
             int front_distance = usSensorFront.getDistance();
             if (front_distance <= 5) { // se alinha com a mesa
@@ -22,7 +22,7 @@ void basicManipulationTest() {
                 break;
             }
         }
-        Serial.println("encontrou a mesa");
+        Serial.println("Encontrou a mesa");
 
         // verifica altura da mesa
         int table_height = Tortuga.checkTableHeightFront();
@@ -33,7 +33,7 @@ void basicManipulationTest() {
 
         if(cubeFound == 1){ // pega o cubo, caso encontre
           Tortuga.getCubeFront(table_height); //confirmacao que pegou o cubo
-          char cube_color = Tortuga.checkCubeColor();
+          cube_color = Tortuga.checkCubeColor();
           if (cube_color == 'B') { // mostra a cor do cubo
             rgbLED.blue();
             rgbLED.off();
@@ -52,7 +52,7 @@ void basicManipulationTest() {
           Tortuga.rotateClockwise(1115);
           Tortuga.moveLeft(850);
 
-          while (true) { // anda ate encontrar a mesa
+          while (1) { // anda ate encontrar a mesa
             Tortuga.moveForward(150);
             int front_distance = usSensorFront.getDistance();
             if (front_distance <= 5) { // se alinha com a mesa
@@ -62,12 +62,12 @@ void basicManipulationTest() {
                 break;
             }
           }
-          cubeFound = Tortuga.checkForCubeBack(table_height);
+          int cubeFound = Tortuga.checkForCubeBack(table_height);
 
           if(cubeFound == 1){ // encontrou um cubo atrás, então pega
             Tortuga.moveForward(50);
             Tortuga.getCubeBack(table_height); //getcubeBack
-            char cube_color = Tortuga.checkCubeColor();
+            cube_color = Tortuga.checkCubeColor();
             if (cube_color == 'B') { // mostra a cor do cubo
               rgbLED.blue();
               rgbLED.off();
@@ -113,7 +113,7 @@ void basicManipulationTest() {
           }
         }
         
-        while (true) { // anda ate encontrar a mesa de entrega
+        while (1) { // anda ate encontrar a mesa de entrega
             Tortuga.moveForward(150);
             int front_distance = usSensorFront.getDistance();
             if (front_distance <= 5) { // se alinha com a mesa

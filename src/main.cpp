@@ -31,7 +31,8 @@ void setup() {
 }
 
 void loop() {
-  
+  char floorColor = Tortuga.checkCubeColor();
+  delay(1000);
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

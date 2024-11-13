@@ -39,6 +39,7 @@
 
     // sensor de cor da garra
     ColorSensor clawSensor(17, 16, 14, 15, 18);
+    ColorSensor floorSensor(28, 26, 36, 12, 34);
 
     // servo motor da garra
     Servo clawServo;
@@ -47,7 +48,7 @@
     LED rgbLED(24, 22);
 
     // raspberry
-    SoftwareSerial raspy(0, 0);
+    SoftwareSerial raspy(10, 11);
 
     // bumper
     Bumper clawBumper(22);
@@ -56,7 +57,7 @@
     MotorDC clawMotor(21, 20, 5, 0, 0);
 
     // robot
-    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, usSensorTable, irSensorLFR, irSensorLFC, irSensorLFL, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, rgbLED, raspy, clawBumper, clawMotor);
+    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, usSensorTable, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, floorSensor, rgbLED, raspy, clawBumper, clawMotor);
 
 void start() {
     // configuracoes

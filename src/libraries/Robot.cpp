@@ -463,42 +463,40 @@ int Robot::checkForCubeBack(int tableHeight) {
     }
 };
 
-// metodos dos sensores infravermelhos de segue linha
-void Robot::followLine(int activator) {
-    while (activator == true) {
-        int leftReading = irSensorLFL.measureDistance();
-        int centerReading = irSensorLFC.measureDistance();
-        int rightReading = irSensorLFR.measureDistance();
-
-        if (centerReading > 900 && leftReading < 900 && centerReading < 900) {
-            moveForward(50);
-        } else {
-            if (centerReading < 900 && leftReading > 900 && rightReading < 900) {
-                rotateAntiClockwise(50);
-            }
-            if (centerReading < 900 && leftReading < 900 && rightReading > 900) {
-                rotateClockwise(50);
-            }
-        }
-    }
-};
-
 // metodos envolvendo sensor de cor
 char Robot::checkCubeColor() {
-    int red_value = clawSensor.colorRead('r', 20);
-    int green_value = clawSensor.colorRead('g', 20);
-    int blue_value = clawSensor.colorRead('b', 20);
+    int red_value = clawSensor.colorRead('r', 100);
+    int green_value = clawSensor.colorRead('g', 100);
+    int blue_value = clawSensor.colorRead('b', 100);
     delay(1000);
     Serial.println(red_value);
     Serial.println(green_value);
     Serial.println(blue_value);
 
-    if (red_value > blue_value && red_value > green_value) {
+    if (red_value > 1.3*green_value) {
+        Serial.println("Vermelho detectado\n");
         return 'R';
-    } else if (blue_value > red_value && blue_value > green_value) {
+    } else {
+        Serial.println("Azul detectado\n");
+        return 'B';
+    }
+};
+
+char Robot::checkFloorColor() {
+    int red_value = floorSensor.colorRead('r', 100);
+    int green_value = floorSensor.colorRead('g', 100);
+    int blue_value = floorSensor.colorRead('b', 100);
+    delay(1000);
+    Serial.println(red_value);
+    Serial.println(green_value);
+    Serial.println(blue_value);
+
+    if (blue_value > red_value + 10 && blue_value > green_value + 10) {
+        Serial.println("Azul detectado\n");
         return 'B';
     } else {
-        return ' ';
+        Serial.println("Branco detectado\n");
+        return 'W';
     }
 };
 
@@ -552,29 +550,35 @@ int Robot::readTag() {
 };
 
 char Robot::checkConteinerColor() {
-    // envia comando para a raspy
-    raspy.println('C');
+    // Envia o comando para a Raspberry Pi
+    raspy.write('C');
+    delay(100);  // Espera um pouco para que a Raspberry Pi processe e envie a resposta
 
+    // Verifica se há dados disponíveis na comunicação serial
     if (raspy.available() > 0) {
-        char color = raspy.read(); // le mensagem recebida
-        delay(100);
+        char color = raspy.read();  // Lê o primeiro caractere recebido
 
-        if (color == 'R') {
-            return 'R';
-            // para debugar
-            Serial.println("Vermelho");
+        // Ignora quaisquer caracteres extras no buffer
+        while (raspy.available() > 0) {
+            raspy.read();
         }
 
-        if (color == 'B') {
+        // Verifica se o caractere lido é 'R' ou 'B'
+        if (color == 'R') {
+            Serial.println("Vermelho");  // Debug
+            return 'R';
+        } else if (color == 'B') {
+            Serial.println("Azul");  // Debug
             return 'B';
-            // para debugar
-            Serial.println("Azul");
+        } else {
+            Serial.println("Caractere desconhecido recebido");  // Debug para caractere inválido
+            return 'N';  // 'N' para indicar uma resposta inválida
         }
     } else {
-        Serial.println("Raspy nao enviou nada");
+        Serial.println("Raspy não enviou nada");  // Debug para ausência de resposta
+        return 'N';  // 'N' para indicar ausência de resposta
     }
 };
-
 
 void Robot::placeCube(){
     moveClawDown(10);

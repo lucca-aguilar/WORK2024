@@ -23,15 +23,13 @@ private:
     UltrasonicSensor usSensorRight;
     UltrasonicSensor usSensorLeft;
     UltrasonicSensor usSensorTable;
-    InfraredSensor irSensorLFR;
-    InfraredSensor irSensorLFC;
-    InfraredSensor irSensorLFL;
     InfraredSensor irSensorTableHeight1;
     InfraredSensor irSensorTableHeight2;
     InfraredSensor irSensorTableHeight3;
     InfraredSensor irSensorTableHeight4;
     Servo clawServo;
     ColorSensor clawSensor;
+    ColorSensor floorSensor;
     LED rgbLED;
     SoftwareSerial raspy;
     Bumper clawBumper;
@@ -39,8 +37,8 @@ private:
 
 public:
     // construtor da classe robot
-    Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, UltrasonicSensor& usSensorTable,InfraredSensor& irSensorLFR, InfraredSensor& irSensorLFC, InfraredSensor& irSensorLFL, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, LED& rgbLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor)
-        : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), usSensorTable(usSensorTable), irSensorLFR(irSensorLFR), irSensorLFC(irSensorLFR), irSensorLFL(irSensorLFL), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), rgbLED(rgbLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
+    Robot(AccelStepper& motor1, AccelStepper& motor2, AccelStepper& motor3, AccelStepper& motor4, UltrasonicSensor& usSensorFront, UltrasonicSensor& usSensorRight, UltrasonicSensor& usSensorLeft, UltrasonicSensor& usSensorTable, InfraredSensor& irSensorTableHeight1, InfraredSensor& irSensorTableHeight2, InfraredSensor& irSensorTableHeight3, InfraredSensor& irSensorTableHeight4, Servo& clawServo, ColorSensor& clawSensor, ColorSensor& floorSensor, LED& rgbLED, SoftwareSerial& raspy, Bumper& clawBumper, MotorDC& clawMotor)
+        : motor1(motor1), motor2(motor2), motor3(motor3), motor4(motor4), usSensorFront(usSensorFront), usSensorRight(usSensorRight), usSensorLeft(usSensorLeft), usSensorTable(usSensorTable), irSensorTableHeight1(irSensorTableHeight1), irSensorTableHeight2(irSensorTableHeight2), irSensorTableHeight3(irSensorTableHeight3), irSensorTableHeight4(irSensorTableHeight4), clawServo(clawServo), clawSensor(clawSensor), floorSensor(floorSensor), rgbLED(rgbLED), raspy(raspy), clawBumper(clawBumper), clawMotor(clawMotor) {}
 
     // metodos de configuracao
     void servoConfiguration();
@@ -75,11 +73,9 @@ public:
     int checkForCubeFront(int tableHeight);
     int checkForCubeBack(int tableHeight);
 
-    // metodos dos sensores infravermelhos segue linha
-    void followLine(int activator);
-
     // metodos envolvendo sensor de cor
     char checkCubeColor();
+    char checkFloorColor();
 
     // metodos envolvendo visao
     int checkVirtualWall();
