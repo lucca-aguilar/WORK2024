@@ -36,7 +36,7 @@ void goToLineBack() {
 void goToStackingZone() {
     Tortuga.moveBackward(700);
     Tortuga.rotateClockwise(562);
-    Tortuga.moveForward(300);
+    Tortuga.moveForward(1200);
     while(1) {
         Tortuga.moveForward(70);
         char floor_color = Tortuga.checkFloorColor();
@@ -48,7 +48,6 @@ void goToStackingZone() {
 }
 
 int defineHeight(int cube_counter) {
-    int height;
     if (cube_counter == 1) {
         return 5;
     } 
@@ -121,7 +120,15 @@ void basicTransportationTestI() {
             }
                 goToLineBack();
             } else {
-                // finaliza a rodada
+                Tortuga.moveRight(560);
+                Tortuga.moveForward(3000);
+                Tortuga.rotateClockwise(562);
+                Tortuga.moveForward(3000);
+                Tortuga.rotateAntiClockwise(20);
+                Tortuga.moveForward(1200);
+                Tortuga.rotateAntiClockwise(562);
+                Tortuga.moveForward(2000);
+                delay(15000);
             }
         }
 
@@ -131,6 +138,18 @@ void basicTransportationTestI() {
         // coloca o cubo na pilha
         int height = defineHeight(cube_counter);
         Tortuga.placeCube(height);
-        Serial.println("Por agora é isso\n");
+        //voltar para mesa
+        Tortuga.moveBackward(700);
+        Tortuga.rotateClockwise(562);
+        Tortuga.moveForward(300);
+        while(1) {
+            Tortuga.moveForward(70);
+            char floor_color = Tortuga.checkFloorColor();
+            if (floor_color == 'B') {
+                Tortuga.stop();
+                break;
+            }
+        }   
+
     }
 }
