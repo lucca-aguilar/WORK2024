@@ -57,28 +57,28 @@ void Robot::getCubeFront(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(100);
+        moveRight(90);
         moveClawDown(34);
-        moveForward(200);
+        moveForward(210);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(100);
+        moveRight(90);
         moveClawDown(29);
-        moveForward(200);
+        moveForward(210);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(100);
+        moveRight(90);
         moveClawDown(24);
-        moveForward(200);
+        moveForward(210);
     }
 
     defaultClawPosition();
 
-    while(usSensorFront.getDistance() < 10){
+    while(usSensorFront.getDistance() < 15){
         moveLeft(70);
     }
     moveLeft(400);
@@ -92,23 +92,23 @@ void Robot::getCubeBack(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(105);
+        moveRight(95);
         moveClawDown(34);
-        moveForward(200);
+        moveForward(210);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(105);
+        moveRight(95);
         moveClawDown(29);
-        moveForward(200);
+        moveForward(210);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(105);
+        moveRight(95);
         moveClawDown(24);
-        moveForward(200);
+        moveForward(210);
     }
 
     defaultClawPosition();
@@ -116,7 +116,7 @@ void Robot::getCubeBack(int table_height) {
     while(1){
         int frontDistance = usSensorFront.getDistance();
         moveRight(70);
-        if(frontDistance > 10){
+        if(frontDistance > 15){
             moveRight(400);
             stop();
             break;
@@ -219,7 +219,7 @@ void Robot::moveClawUp(int dc_dislocation) {
 
 void Robot::moveClawDown(int dc_dislocation) {
     int dc_time = 0;
-    dc_time = ((dc_dislocation + 8 - 1.5375) / 4.5) * 1000;
+    dc_time = ((dc_dislocation + 12 - 1.5375) / 4.5) * 1000;
     Serial.println(dc_time);
     clawMotor.moveBackward(255);
     delay(dc_time);
@@ -291,67 +291,13 @@ int Robot::checkTableHeightFront() {
     return smallerTableHeight;
 };
 
-int Robot::checkTableHeightBack() {
-
-    /*para descobrir a altura de uma mesa, ja estando em frente a ela, o robo realiza os seguintes passos:
-    1- realiza a leitura dos sensores no ponto "central" 
-    2- move-se para a esquerda e realiza a leitura novamente
-    3- move-se para a direita e realiza a leitura mais uma vez
-    4- a altura e a media das tres alturas verificadas
-    */
-    int irThreshold = 950;
-    int tableHeight[3], sensorsReadings[4];
-
-    for (int counter = 0; counter < 3; counter++) {
-        // leituras dos sensores infravermelho
-        sensorsReadings[0] = 0;
-        sensorsReadings[1] = 0;
-        sensorsReadings[2] = 0;
-        sensorsReadings[3] = 0;
-
-        sensorsReadings[0] = irSensorTableHeight1.measureDistance();
-        sensorsReadings[1] = irSensorTableHeight2.measureDistance();
-        sensorsReadings[2] = irSensorTableHeight3.measureDistance();
-        sensorsReadings[3] = irSensorTableHeight4.measureDistance();
-
-        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
-            tableHeight[counter] = 5;
-        }
-        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
-            tableHeight[counter] = 10;
-        }
-        if (sensorsReadings[3] < irThreshold && sensorsReadings[2] < irThreshold && sensorsReadings[1] < irThreshold && sensorsReadings[0] > irThreshold) {
-            tableHeight[counter] = 15;
-        }
-
-        if (counter == 0) {
-            moveRight(200);
-        }
-
-        if (counter == 1) {
-            moveLeft(300);
-        }
-    }
-
-    int smallerTableHeight = 15;
-    for (int i = 0; i < 3; i++) {
-        if (tableHeight[i] <= smallerTableHeight) {
-            smallerTableHeight = tableHeight[i];
-        }
-    }
-    Serial.println("Table height:");
-    Serial.println(smallerTableHeight);
-    return smallerTableHeight;
-};
-
-
 int Robot::checkForCubeFront(int tableHeight) {
     /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
     1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
     2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
-    int irThreshold = 950;
+    int irThreshold = 1000;
     int cubeFound = 0;
     
     while(1){
@@ -387,8 +333,8 @@ int Robot::checkForCubeFront(int tableHeight) {
         }
 
         if(tableHeight == 15){
-            topSensorReading = usSensorTable.getDistance();
-            if (topSensorReading <= 12) {
+            topSensorReading = irSensorTableHeight1.measureDistance();
+            if (topSensorReading <= irThreshold) {
                 stop();
                 cubeFound = 1;
                 return cubeFound;
@@ -400,7 +346,7 @@ int Robot::checkForCubeFront(int tableHeight) {
                 return cubeFound;}*/
         }
         int frontDistance = usSensorFront.getDistance();
-        if(frontDistance > 10){
+        if(frontDistance > 15){
             stop();
             return cubeFound;
         }
@@ -409,7 +355,7 @@ int Robot::checkForCubeFront(int tableHeight) {
 
 
 int Robot::checkForCubeBack(int tableHeight) {
-    int irThreshold = 950;
+    int irThreshold = 1000;
     int cubeFound = 0;
 
     if (cubeFound == 0) {
@@ -440,8 +386,8 @@ int Robot::checkForCubeBack(int tableHeight) {
 
             if (tableHeight == 15) {
 
-                topSensorReading = usSensorTable.getDistance();
-                if (topSensorReading <= 12) {
+                topSensorReading = irSensorTableHeight4.measureDistance();
+                if (topSensorReading <= irThreshold) {
                     stop();
                     cubeFound = 1;
                     return cubeFound;

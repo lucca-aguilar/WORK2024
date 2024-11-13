@@ -31,10 +31,7 @@ void setup() {
 }
 
 void loop() {
-  Tortuga.defaultClawPosition();
-  delay(2000);
-  Tortuga.moveClawDown(24);
-  
+  basicManipulationTest();
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
