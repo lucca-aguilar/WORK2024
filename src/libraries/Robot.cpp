@@ -219,7 +219,7 @@ void Robot::moveClawUp(int dc_dislocation) {
 
 void Robot::moveClawDown(int dc_dislocation) {
     int dc_time = 0;
-    dc_time = ((dc_dislocation + 4 - 1.5375) / 4.5) * 1000;
+    dc_time = ((dc_dislocation + 8 - 1.5375) / 4.5) * 1000;
     Serial.println(dc_time);
     clawMotor.moveBackward(255);
     delay(dc_time);
