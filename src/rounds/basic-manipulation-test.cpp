@@ -17,7 +17,7 @@ void basicManipulationTest() {
             int front_distance = usSensorFront.getDistance();
             if (front_distance <= 5) { // se alinha com a mesa
                 Tortuga.motorsConfiguration(300, 300);
-                Tortuga.moveForward(100);
+                Tortuga.moveForward(80);
                 Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
                 break;
             }
@@ -49,7 +49,7 @@ void basicManipulationTest() {
         if(cubeFound == 0){ // se não encontrou, procura na parte de trás da mesa
           Tortuga.moveLeft(850);
           Tortuga.moveForward(1800);
-          Tortuga.rotateClockwise(1115);
+          Tortuga.rotateClockwise(1105);
           Tortuga.moveLeft(850);
 
           while (1) { // anda ate encontrar a mesa
@@ -88,8 +88,8 @@ void basicManipulationTest() {
             }
 
             Tortuga.moveForward(1500);
-            Tortuga.rotateClockwise(560);
-            Tortuga.moveForward(3500);
+            Tortuga.rotateClockwise(550);
+            Tortuga.moveForward(3400);
             Tortuga.rotateAntiClockwise(562);
             Tortuga.moveForward(1200);
             Tortuga.stop();
@@ -100,15 +100,14 @@ void basicManipulationTest() {
         }
 
         Tortuga.moveForward(3300);
-        Tortuga.rotateAntiClockwise(565);
+        Tortuga.rotateAntiClockwise(30);
 
         //anda ate a parede da mesa de entrega
         while(1){
-          Tortuga.moveForward(150);
-          int frontDistance = usSensorFront.getDistance();
-          if(frontDistance <= 15){
+          Tortuga.moveLeft(150);
+          int leftDistance = usSensorLeft.getDistance();
+          if(leftDistance <= 25){
             Tortuga.stop();
-            Tortuga.rotateClockwise(562);
             break;
           }
         }
@@ -124,7 +123,6 @@ void basicManipulationTest() {
             }
         }
 
-        int deliveryTableHeight = 10;
         Tortuga.placeCube();
     }
 }
