@@ -34,8 +34,9 @@ void goToLineBack() {
 }
 
 void goToStackingZone() {
-    Tortuga.moveBackward(500);
+    Tortuga.moveBackward(700);
     Tortuga.rotateClockwise(562);
+    Tortuga.moveForward(300);
     while(1) {
         Tortuga.moveForward(70);
         char floor_color = Tortuga.checkFloorColor();

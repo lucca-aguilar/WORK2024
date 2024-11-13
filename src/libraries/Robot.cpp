@@ -57,21 +57,21 @@ void Robot::getCubeFront(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(90);
+        moveRight(100);
         moveClawDown(34);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(90);
+        moveRight(100);
         moveClawDown(29);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(90);
+        moveRight(100);
         moveClawDown(24);
         moveForward(270);
     }
@@ -87,21 +87,21 @@ void Robot::getCubeBack(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(90);
+        moveRight(100);
         moveClawDown(34);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(90);
+        moveRight(100);
         moveClawDown(29);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(90);
+        moveRight(100);
         moveClawDown(24);
         moveForward(270);
     }
@@ -205,7 +205,7 @@ void Robot::moveClawUp(int dc_dislocation) {
 
 void Robot::moveClawDown(int dc_dislocation) {
     int dc_time = 0;
-    dc_time = ((dc_dislocation + 12 - 1.5375) / 4.5) * 1000;
+    dc_time = ((dc_dislocation + 9 - 1.5375) / 4.5) * 1000;
     Serial.println(dc_time);
     clawMotor.moveBackward(255);
     delay(dc_time);
@@ -225,10 +225,20 @@ void Robot::defaultClawPosition() {
 
 void Robot::placeCube(int height){
     moveClawDown(39 - height);
+
+    // abre a garra
     clawServo.writeMicroseconds(1300);
     delay(1200);
     clawServo.writeMicroseconds(1500);
-    defaultClawPosition();
+
+    // volta a garra para cima
+    clawMotor.moveForward(255);
+    delay(8000);
+
+    // fecha a garra
+    clawServo.writeMicroseconds(1700);
+    delay(1200);
+    clawServo.writeMicroseconds(1500);
 };
 
 // metodos envolvendo sensores
@@ -437,7 +447,7 @@ char Robot::checkFloorColor() {
     Serial.println(green_value);
     Serial.println(blue_value);
 
-    if (blue_value > red_value + 10 && blue_value > green_value + 10) {
+    if (blue_value > 2*red_value) {
         Serial.println("Azul detectado\n");
         return 'B';
     } else {
