@@ -352,7 +352,7 @@ int Robot::checkForCubeFront(int tableHeight) {
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
     int irThreshold = 950;
-    boolean cubeFound = 0;
+    int cubeFound = 0;
     
     while(1){
         int rightDistance = usSensorRight.getDistance();
@@ -388,7 +388,7 @@ int Robot::checkForCubeFront(int tableHeight) {
 
         if(tableHeight == 15){
             topSensorReading = usSensorTable.getDistance();
-            if (topSensorReading <= 20) {
+            if (topSensorReading <= 12) {
                 stop();
                 cubeFound = 1;
                 return cubeFound;
@@ -441,7 +441,7 @@ int Robot::checkForCubeBack(int tableHeight) {
             if (tableHeight == 15) {
 
                 topSensorReading = usSensorTable.getDistance();
-                if (topSensorReading <= 20) {
+                if (topSensorReading <= 12) {
                     stop();
                     cubeFound = 1;
                     return cubeFound;
