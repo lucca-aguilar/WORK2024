@@ -142,9 +142,10 @@ void basicTransportationTestI() {
         
         // volta para a mesa
         Tortuga.rotateClockwise(1124);
-        Tortuga.moveForward(3000);
-        Tortuga.moveRight(3000);
-        Tortuga.moveRight(700);
-        Tortuga.rotateAntiClockwise(562);
+        Tortuga.moveForward(2000);
+        Tortuga.moveRight(2000);
+        Tortuga.rotateAntiClockwise(580);
+        Tortuga.moveRight(2000);
+        Tortuga.rotateAntiClockwise(25);
     }
 }
