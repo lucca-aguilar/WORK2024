@@ -59,29 +59,24 @@ void Robot::getCubeFront(int table_height) {
         moveBackward(300);
         moveRight(90);
         moveClawDown(34);
-        moveForward(210);
+        moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
         moveRight(90);
         moveClawDown(29);
-        moveForward(210);
+        moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
         moveRight(90);
         moveClawDown(24);
-        moveForward(210);
+        moveForward(270);
     }
 
     defaultClawPosition();
-
-    while(usSensorFront.getDistance() < 15){
-        moveLeft(70);
-    }
-    moveLeft(400);
 };
 
 void Robot::getCubeBack(int table_height) {
@@ -92,37 +87,28 @@ void Robot::getCubeBack(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(95);
+        moveRight(90);
         moveClawDown(34);
-        moveForward(210);
+        moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(95);
+        moveRight(90);
         moveClawDown(29);
-        moveForward(210);
+        moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(95);
+        moveRight(90);
         moveClawDown(24);
-        moveForward(210);
+        moveForward(270);
     }
 
     defaultClawPosition();
-    
-    while(1){
-        int frontDistance = usSensorFront.getDistance();
-        moveRight(70);
-        if(frontDistance > 15){
-            moveRight(400);
-            stop();
-            break;
-        }
-    }
 };
+
 
 // metodos envolvendo motores de passo (movimentacao)
 void Robot::moveForward(int steps) {
@@ -339,12 +325,9 @@ int Robot::checkForCubeFront(int tableHeight) {
                 cubeFound = 1;
                 return cubeFound;
             }
-            /*topSensorReading = irSensorTableHeight1.measureDistance();
-            if(topSensorReading <= irThreshold){
-                stop();
-                cubeFound = 1;
-                return cubeFound;}*/
+            
         }
+
         int frontDistance = usSensorFront.getDistance();
         if(frontDistance > 15){
             stop();
@@ -353,58 +336,61 @@ int Robot::checkForCubeFront(int tableHeight) {
     }
 };
 
-
 int Robot::checkForCubeBack(int tableHeight) {
+    /*para verificar a presenca de um cubo sobre uma mesa, o robo segue os seguintes passos:
+    1- se movimenta ate o ponto mais a direita da mesa, verificando com o sensor ultrassonico
+    2- se movimenta para a esquerda e le com o sensor acima da altura da mesa
+    3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
+    */
     int irThreshold = 1000;
     int cubeFound = 0;
-
-    if (cubeFound == 0) {
-        while (1) {
-            int leftDistance = usSensorLeft.getDistance();
+    
+    while(1){
+        int leftDistance = usSensorLeft.getDistance();
+        if(leftDistance >= 7){
             moveLeft(70);
-            int topSensorReading;
+        }else{
+            stop();
+            break;
+        }
+    }
 
-            if (tableHeight == 5) {
-                topSensorReading = irSensorTableHeight3.measureDistance();
-                if (topSensorReading < irThreshold) {
-                    stop();
-                    cubeFound = 1;
-                    return cubeFound;
-                    break;
-                }
-            }
+    while(1){
+        int topSensorReading;
+        moveRight(70);
 
-            if (tableHeight == 10) {
-                topSensorReading = irSensorTableHeight2.measureDistance();
-                if (topSensorReading < irThreshold) {
-                    stop();
-                    cubeFound = 1;
-                    return cubeFound;
-                    break;
-                }
-            }
-
-            if (tableHeight == 15) {
-
-                topSensorReading = irSensorTableHeight4.measureDistance();
-                if (topSensorReading <= irThreshold) {
-                    stop();
-                    cubeFound = 1;
-                    return cubeFound;
-                }
-
-                /*topSensorReading = irSensorTableHeight1.measureDistance();
-                if (topSensorReading < irThreshold) {
-                    stop();
-                    cubeFound = 1;
-                    return cubeFound;
-                    break;}*/
-            }
-
-            if (leftDistance <= 10) {
+        if(tableHeight == 5){
+            topSensorReading = irSensorTableHeight3.measureDistance();
+            if(topSensorReading <= irThreshold){
+                stop();
+                cubeFound = 1;
                 return cubeFound;
-                break;
             }
+        }
+
+        if(tableHeight == 10){
+            topSensorReading = irSensorTableHeight2.measureDistance();
+            if(topSensorReading <= irThreshold){
+                stop();
+                cubeFound = 1;
+                return cubeFound;
+            }
+        }
+
+        if(tableHeight == 15){
+            topSensorReading = irSensorTableHeight1.measureDistance();
+            if (topSensorReading <= irThreshold) {
+                stop();
+                cubeFound = 1;
+                return cubeFound;
+            }
+            
+        }
+        
+        int frontDistance = usSensorFront.getDistance();
+        if(frontDistance > 15){
+            stop();
+            return cubeFound;
         }
     }
 };

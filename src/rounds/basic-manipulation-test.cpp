@@ -26,12 +26,13 @@ void basicManipulationTest() {
 
         // verifica altura da mesa
         int table_height = Tortuga.checkTableHeightFront();
+        Serial.println(table_height);
 
         // escaneia em busca de um cubo pela frente
         int cubeFound = Tortuga.checkForCubeFront(table_height);
-        Serial.println("cubefound is " + cubeFound);
+        Serial.println("Cubefound is " + cubeFound);
 
-        if(cubeFound == 1){ // pega o cubo, caso encontre
+        if(cubeFound == 1){ // pega o cubo, caso encontre na frente
           Tortuga.getCubeFront(table_height); //confirmacao que pegou o cubo
           cube_color = Tortuga.checkCubeColor();
           if (cube_color == 'B') { // mostra a cor do cubo
