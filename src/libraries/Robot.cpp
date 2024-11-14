@@ -500,7 +500,7 @@ int Robot::virtualWallDistance() {
 
 int Robot::readTag() {
     // envia comando para a raspy
-    raspy.println("Checar AprilTag");
+    raspy.write('A');
     delay(100);
 
     if (raspy.available() > 0) {
@@ -508,6 +508,38 @@ int Robot::readTag() {
         return aprilTag;
     }
 };
+
+void Robot::alignWithTag() {
+    // envia comando para a raspy
+    raspy.write('L');
+    delay(100);
+
+    char command;
+
+    while(command != 'S') {
+        if (raspy.available() > 0) {
+            command = raspy.read();
+            Serial.println("Comando recebido:");
+            Serial.println(command);
+
+            if (command == 'R') {
+                Serial.println("Movendo para a direita");
+                moveRight(50);
+            } 
+
+            if (command == 'L') {
+                Serial.println("Movendo para a esquerda");
+                moveLeft(50);
+            }
+
+            if (command == 'S') {
+                Serial.println("Tag alinhada");
+                stop();
+            }
+        }
+    }
+    stop();
+}; 
 
 char Robot::checkConteinerColor() {
     // Envia o comando para a Raspberry Pi

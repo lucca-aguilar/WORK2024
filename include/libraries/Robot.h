@@ -81,6 +81,7 @@ public:
     int checkVirtualWall();
     int virtualWallDistance();
     int readTag();
+    void alignWithTag();
     char checkConteinerColor(); 
 };
 
