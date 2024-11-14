@@ -31,9 +31,11 @@ void setup() {
 }
 
 void loop() {
+  Tortuga.defaultClawPosition();
   int id = Tortuga.checkForCubeVision();
   Serial.println("Id:");
   Serial.println(id);
+  Tortuga.getCubeFront(10);
 
 }
  

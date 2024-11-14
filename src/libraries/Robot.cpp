@@ -57,21 +57,21 @@ void Robot::getCubeFront(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(100);
+        moveLeft(100);
         moveClawDown(34);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(100);
+        moveLeft(100);
         moveClawDown(29);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(100);
+        moveLeft(100);
         moveClawDown(24);
         moveForward(270);
     }
@@ -499,45 +499,44 @@ int Robot::virtualWallDistance() {
 };
 
 int Robot::alignWithTag() {
-    // variaveis
-    int tag;
+    // Variável para armazenar o ID da tag
+    int tag = -1;  // Valor inicial para indicar "não encontrado"
 
-    // envia comando para a raspy
+    // Envia comando para a Raspberry Pi iniciar a detecção de tag
     raspy.write('L');
     delay(100);
 
-    if(raspy.available() > 0) {
+    // Verifica se há uma resposta do ID da tag
+    if (raspy.available() > 0) {
         String tag_string = raspy.readStringUntil('\n');
         tag = tag_string.toInt();
-        Serial.println(tag);
+        Serial.println("ID da tag recebida: " + String(tag));
     }
 
-    char command;
-    while(command != 'S') {
-        if (raspy.available() > 0) {
-            char command = raspy.read();
-            Serial.println("Comando recebido:");
-            Serial.println(command);
+    // Se uma tag foi encontrada, ajustar para alinhamento
+    if (tag > 0) {  // Verifica se o ID da tag é válido
+        char command = ' ';
 
-            if (command == 'R') {
-                Serial.println("Movendo para a direita");
-                moveRight(50);
-            } 
+        while (command != 'S') {
+            if (raspy.available() > 0) {
+                command = raspy.read();  // Recebe o comando
 
-            if (command == 'L') {
-                Serial.println("Movendo para a esquerda");
-                moveLeft(50);
-            }
-
-            if (command == 'S') {
-                Serial.println("Tag alinhada");
-                stop();
+                // Interpreta o comando para alinhar com a tag
+                if (command == 'R') {
+                    Serial.println("Movendo para a direita");
+                    moveRight(50);
+                } else if (command == 'L') {
+                    Serial.println("Movendo para a esquerda");
+                    moveLeft(50);
+                } else if (command == 'S') {
+                    Serial.println("Tag alinhada");
+                    stop();
+                }
             }
         }
     }
     return tag;
-    stop();
-}; 
+}
 
 char Robot::checkConteinerColor() {
     // Envia o comando para a Raspberry Pi
@@ -570,29 +569,31 @@ char Robot::checkConteinerColor() {
     }
 };
 
-int Robot::checkForCubeVision(){
-    while(1) {
+int Robot::checkForCubeVision() {
+    // Etapa 1: Mover para a direita até detectar uma parede
+    while (1) {
         int rightDistance = usSensorRight.getDistance();
         moveRight(70);
-        if (rightDistance <= 10) {
+
+        if (rightDistance <= 10) {  // Para ao detectar a parede à direita
             stop();
             break;
         }
     }
 
-    while(1) {
+    // Etapa 2: Busca do cubo com AprilTag movendo para a esquerda
+    while (1) {
         int frontDistance = usSensorFront.getDistance();
-        int id_tag = alignWithTag();
-        if (id_tag == -1) {
-            moveLeft(70);
-            return id_tag;
-        } else if (frontDistance > 15) {
+        int id_tag = alignWithTag();  // Alinha com a tag mais próxima
+
+        if (id_tag == -1) {  // Se não encontrar tag 
+            moveLeft(70);  // Move para a esquerda para buscar novamente
+        } else if (frontDistance > 15) {  // Se a distância da frente é segura
             stop();
-            return id_tag;
         } else {
-            moveLeft(50);
+            moveLeft(70);  // Ajuste fino para a esquerda e parada
             stop();
-            return id_tag;
-        } 
+            return id_tag;  // Retorna o ID da tag detectada
+        }
     }
-};
+}
