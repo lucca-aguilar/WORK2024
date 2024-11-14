@@ -443,9 +443,9 @@ char Robot::checkCubeColor() {
 };
 
 char Robot::checkFloorColor() {
-    int red_value = floorSensor.colorRead('r', 100);
-    int green_value = floorSensor.colorRead('g', 100);
-    int blue_value = floorSensor.colorRead('b', 100);
+    int red_value = RightFloorSensor.colorRead('r', 100);
+    int green_value = RightFloorSensor.colorRead('g', 100);
+    int blue_value = RightFloorSensor.colorRead('b', 100);
     delay(1000);
     Serial.println(red_value);
     Serial.println(green_value);
@@ -498,24 +498,18 @@ int Robot::virtualWallDistance() {
     }
 };
 
-int Robot::readTag() {
-    // envia comando para a raspy
-    raspy.write('A');
-    delay(100);
-
-    if (raspy.available() > 0) {
-        int aprilTag = raspy.parseInt(); // le mensagem recebida
-        return aprilTag;
-    }
-};
-
-void Robot::alignWithTag() {
+int Robot::alignWithTag() {
     // envia comando para a raspy
     raspy.write('L');
     delay(100);
 
-    char command;
+    char tag;
+    if(raspy.available() > 0) {
+        int tag = raspy.parseInt();
+        Serial.println(tag);
+    }
 
+    char command;
     while(command != 'S') {
         if (raspy.available() > 0) {
             command = raspy.read();
@@ -538,6 +532,7 @@ void Robot::alignWithTag() {
             }
         }
     }
+    return tag;
     stop();
 }; 
 
@@ -569,5 +564,32 @@ char Robot::checkConteinerColor() {
     } else {
         Serial.println("Raspy não enviou nada");  // Debug para ausência de resposta
         return 'N';  // 'N' para indicar ausência de resposta
+    }
+};
+
+int Robot::checkForCubeVision(){
+    while(1) {
+        int rightDistance = usSensorRight.getDistance();
+        moveRight(70);
+        if (rightDistance <= 10) {
+            stop();
+            break;
+        }
+    }
+
+    while(1) {
+        int frontDistance = usSensorFront.getDistance();
+        int id_tag = alignWithTag();
+        if (id_tag == -1) {
+            moveLeft(70);
+            return id_tag;
+        } else if (frontDistance > 15) {
+            stop();
+            return id_tag;
+        } else {
+            moveLeft(50);
+            stop();
+            return id_tag;
+        } 
     }
 };

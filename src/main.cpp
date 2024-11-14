@@ -31,7 +31,8 @@ void setup() {
 }
 
 void loop() {
-  basicTransportationTestI();
+  int id = Tortuga.alignWithTag();
+  Serial.println(id);
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
