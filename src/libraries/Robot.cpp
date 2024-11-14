@@ -505,7 +505,7 @@ int Robot::alignWithTag() {
 
     char tag;
     if(raspy.available() > 0) {
-        int tag = raspy.parseInt();
+        int tag = raspy.read();
         Serial.println(tag);
     }
 
