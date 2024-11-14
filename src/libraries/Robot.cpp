@@ -499,20 +499,23 @@ int Robot::virtualWallDistance() {
 };
 
 int Robot::alignWithTag() {
+    // variaveis
+    int tag;
+
     // envia comando para a raspy
     raspy.write('L');
     delay(100);
 
-    char tag;
     if(raspy.available() > 0) {
-        int tag = raspy.read();
+        String tag_string = raspy.readStringUntil('\n');
+        tag = tag_string.toInt();
         Serial.println(tag);
     }
 
     char command;
     while(command != 'S') {
         if (raspy.available() > 0) {
-            command = raspy.read();
+            char command = raspy.read();
             Serial.println("Comando recebido:");
             Serial.println(command);
 

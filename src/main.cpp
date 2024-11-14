@@ -31,8 +31,10 @@ void setup() {
 }
 
 void loop() {
-  int id = Tortuga.alignWithTag();
+  int id = Tortuga.checkForCubeVision();
+  Serial.println("Id:");
   Serial.println(id);
+
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
