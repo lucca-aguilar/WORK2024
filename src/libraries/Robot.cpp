@@ -57,21 +57,21 @@ void Robot::getCubeFront(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveLeft(100);
+        moveRight(100);
         moveClawDown(36);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveLeft(100);
+        moveRight(100);
         moveClawDown(31);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveLeft(100);
+        moveRight(100);
         moveClawDown(26);
         moveForward(270);
     }
