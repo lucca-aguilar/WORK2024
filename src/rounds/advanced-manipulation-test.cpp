@@ -7,7 +7,7 @@ int read_tag() {
 
     // envia comando para a Raspberry
     char comando = 'A';
-    raspy.println(comando);
+    raspy.write(comando);
     delay(100);
 
     // verifica se há uma resposta do ID da tag
@@ -23,7 +23,7 @@ int find_tag(int tag_id) {
     while (detected_tag != tag_id) {
         int frontDistance = usSensorFront.getDistance();
         int rightDistance = usSensorRight.getDistance();
-        if (frontDistance > 10 && rightDistance > 10) {
+        if (frontDistance <= 10) {
             Tortuga.moveLeft(70);
         } else {
             Tortuga.moveRight(70);
@@ -36,17 +36,22 @@ int findDistance(int tags_counter) {
     int distance;
     if(tags_counter == 1) {
         distance = 700;
+        return distance;
     }
     if (tags_counter == 2) {
         distance = 550;
+        return distance;
     }
     if (tags_counter == 3) {
         distance = 400;
+        return distance;
     }
     if (tags_counter == 4) {
         distance = 250;
+        return distance;
     } if (tags_counter == 5) {
         distance = 100;
+        return distance;
     }
 }
 
@@ -81,6 +86,7 @@ void advancedManipulationTest() {
             Serial.println(rightDistance);
             if (rightDistance < 10) {
                 Tortuga.stop();
+                delay(10000);
                 break;
             }
         }

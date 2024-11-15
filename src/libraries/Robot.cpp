@@ -503,8 +503,7 @@ int Robot::alignWithTag() {
     int tag = -1;  // Valor inicial para indicar "não encontrado"
 
     // Envia comando para a Raspberry Pi iniciar a detecção de tag
-    char comando = 'L';
-    raspy.println(comando);
+    raspy.write('L');
     delay(100);
 
     // Verifica se há uma resposta do ID da tag
