@@ -58,21 +58,21 @@ void Robot::getCubeFront(int table_height) {
     if (table_height == 5) {
         moveBackward(300);
         moveLeft(100);
-        moveClawDown(34);
+        moveClawDown(36);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
         moveLeft(100);
-        moveClawDown(29);
+        moveClawDown(31);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
         moveLeft(100);
-        moveClawDown(24);
+        moveClawDown(26);
         moveForward(270);
     }
 
@@ -221,6 +221,7 @@ void Robot::defaultClawPosition() {
     // volta a garra para cima
     clawMotor.moveForward(255);
     delay(8000);
+    clawMotor.stop();
 };
 
 void Robot::placeCube(int height){
@@ -323,7 +324,7 @@ int Robot::checkForCubeFront(int tableHeight, int ir1) {
             break;
         }
     }
-
+   
     while(1){
         int topSensorReading;
         moveLeft(70);

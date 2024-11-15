@@ -1,37 +1,22 @@
 #include <advanced-manipulation-test.h>
 #include <Setup.h>
 
-int read_tag() {
-    // variável para armazenar o ID
-    int tag = -1;  // valor inicial
-
-    // envia comando para a Raspberry
-    char comando = 'A';
-    raspy.write(comando);
-    delay(100);
-
-    // verifica se há uma resposta do ID da tag
-    if (raspy.available() > 0) {
-        String tag_string = raspy.readStringUntil('\n');
-        tag = tag_string.toInt();
-        return tag;
-    }
-}
-
-int find_tag(int tag_id) {
-    int detected_tag = 0;
-    while (detected_tag != tag_id) {
-        detected_tag = read_tag();
-        Serial.println("ID da tag recebida: " + String(detected_tag));
-        int frontDistance = usSensorFront.getDistance();
-        if (frontDistance <= 10) {
-            Tortuga.moveLeft(10);
-        } else {
-            Tortuga.moveRight(10);
+int readTag() {
+    int tag = -1;  // Valor inicial
+    // Envia comando para a Raspberry
+    raspy.write('A');
+    unsigned long startTime = millis();
+    while (millis() - startTime < 200) {  // Espera até 200ms
+        if (raspy.available() > 0) {
+            int tag = raspy.parseInt();
         }
     }
-    Tortuga.alignWithTag();
+    // Debug da tag recebida
+    Serial.println("ID da tag recebida: ");
+    Serial.println(tag);
+    return tag;  // Retorna -1 se não recebeu nada
 }
+
 
 int findDistance(int tags_counter) {
     int distance;
@@ -59,9 +44,9 @@ int findDistance(int tags_counter) {
 void advancedManipulationTest() {
     // inicializa variáveis de contagem
     int tags_counter = 1;
+    int identified_tag;
 
-    // coloca a garra na posição inicial
-    Tortuga.defaultClawPosition();
+    int ir1 = irSensorTableHeight1.measureDistance();
 
     // anda até encontrar a mesa
     while(1) {
@@ -87,13 +72,16 @@ void advancedManipulationTest() {
             Serial.println(rightDistance);
             if (rightDistance < 10) {
                 Tortuga.stop();
-                delay(10000);
                 break;
             }
         }
 
-        // encontra a tag correspondente
-        find_tag(tags_counter);
+        // busca um cubo, enquanto n for a id correta
+        while (identified_tag != tags_counter) {
+            Tortuga.checkForCubeFront(table_height, ir1);
+            Tortuga.moveRight(70);
+            identified_tag = readTag();
+        }
 
         // pega o cubo
         Tortuga.getCubeFront(table_height);

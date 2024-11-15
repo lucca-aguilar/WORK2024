@@ -31,13 +31,20 @@ void setup() {
 }
 
 void loop() {
-  advancedManipulationTest();
+
+    Tortuga.moveClawDown(10);
+
+    if (raspy.available() > 0) {
+      String message = raspy.readStringUntil('\n');
+      Serial.println(message);
+    }
+    raspy.write("Oi, Raspyberry!\n");
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
   /*
   int round = 1; // Altere o número da rodada conforme necessário
-
+'
     switch (round) {
         case 1:
             basicManipulationTestI();
