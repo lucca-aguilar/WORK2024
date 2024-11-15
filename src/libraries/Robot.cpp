@@ -503,7 +503,8 @@ int Robot::alignWithTag() {
     int tag = -1;  // Valor inicial para indicar "não encontrado"
 
     // Envia comando para a Raspberry Pi iniciar a detecção de tag
-    raspy.write('L');
+    char comando = 'L';
+    raspy.write(comando);
     delay(100);
 
     // Verifica se há uma resposta do ID da tag
@@ -540,7 +541,8 @@ int Robot::alignWithTag() {
 
 char Robot::checkConteinerColor() {
     // Envia o comando para a Raspberry Pi
-    raspy.write('C');
+    char comando = 'C';
+    raspy.write(comando);
     delay(100);  // Espera um pouco para que a Raspberry Pi processe e envie a resposta
 
     // Verifica se há dados disponíveis na comunicação serial

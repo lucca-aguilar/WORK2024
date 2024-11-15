@@ -18,7 +18,7 @@
  // declaracao dos componentes 
     AccelStepper motor1(AccelStepper::DRIVER, 52, 50);
     AccelStepper motor2(AccelStepper::DRIVER, 51, 53);
-    AccelStepper motor3(AccelStepper::DRIVER, 47, 49);
+    AccelStepper motor3(AccelStepper::DRIVER, 49, 47);
     AccelStepper motor4(AccelStepper::DRIVER, 45, 43);
 
     // sensores ultrassônicos
@@ -63,7 +63,7 @@
 void start() {
     // configuracoes
     Serial.begin(9600);
-    raspy.begin(300000);
+    raspy.begin(15200);
     Tortuga.servoConfiguration();
     Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
     Tortuga.serialConfiguration();

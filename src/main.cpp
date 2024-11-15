@@ -32,11 +32,9 @@ void setup() {
 
 void loop() {
   Tortuga.defaultClawPosition();
-  int id = Tortuga.checkForCubeVision();
-  Serial.println("Id:");
+  int id = Tortuga.alignWithTag();
+  Serial.println("Cor:");
   Serial.println(id);
-  Tortuga.getCubeFront(10);
-
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
