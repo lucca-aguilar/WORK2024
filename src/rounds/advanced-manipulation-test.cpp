@@ -32,52 +32,105 @@ int read_tag() {
     }
 }
 
+int findDistance(int tags_counter) {
+    int distance;
+    if(tags_counter == 1) {
+        distance = 700;
+    }
+    if (tags_counter == 2) {
+        distance = 600;
+    }
+    if (tags_counter == 3) {
+        distance = 500;
+    }
+    if (tags_counter == 4) {
+        distance = 400;
+    } if (tags_counter == 5) {
+        distance = 300;
+    } if (tags_counter == 6) {
+        distance = 200;
+    } if (tags_counter == 7) {
+        distance = 100;
+    }
+}
+
 void advancedManipulationTest() {
+    start();
+
     // inicializa variáveis de contagem
     int tags_counter = 1;
-    int cube_counter = 0;
 
     // coloca a garra na posição inicial
     Tortuga.defaultClawPosition();
 
     // anda até encontrar a mesa
     while(1) {
-        // anda até encontrar a mesa
+        Tortuga.moveForward(150);
+        int front_distance = usSensorFront.getDistance();
+        if (front_distance <= 5) { // se alinha com a mesa
+            Tortuga.motorsConfiguration(300, 300);
+            Tortuga.moveForward(30);
+            Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+            break;
+        }
+    }
+    
+    // checa a altura da mesa
+    int table_height = Tortuga.checkTableHeightFront();
+
+    while(tags_counter <= 7) {
+         // vai para o canto direito da mesa
         while(1) {
-            Tortuga.moveForward(150);
-            int front_distance = usSensorFront.getDistance();
-            if (front_distance <= 5) { // se alinha com a mesa
-                Tortuga.motorsConfiguration(300, 300);
-                Tortuga.moveForward(30);
-                Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
+            int rightDistance = usSensorRight.getDistance();
+            Tortuga.moveRight(70);
+            if (rightDistance < 10) {
+                Tortuga.stop();
+            }
+        }
+
+        // encontra a tag correspondente
+        find_tag(tags_counter);
+
+        // pega o cubo
+        Tortuga.getCubeFront(table_height);
+
+        // vai para a parte de trás da mesa
+        Tortuga.moveLeft(850);
+        Tortuga.moveForward(1800);
+        Tortuga.rotateClockwise(1110);
+        while(1) {
+            int frontDistance = usSensorFront.getDistance();
+            Tortuga.moveLeft(70);
+            if (frontDistance < 10) {
+                break;
+            }
+        }
+
+        // coloca o cubo de acordo com sua distancia correta
+        int distance = findDistance(tags_counter);
+        Tortuga.moveLeft(distance);
+        Tortuga.placeCube(20);
+        tags_counter++;
+
+        // volta para a mesa da frente
+        Tortuga.moveRight(distance + 100);
+        Tortuga.moveForward(1800);
+        Tortuga.rotateClockwise(1110);
+        while(1) {
+            int frontDistance = usSensorFront.getDistance();
+            Tortuga.moveRight(70);
+            if (frontDistance < 10) {
                 break;
             }
         }
     }
-    // checa a altura da mesa
-    int table_height = Tortuga.checkTableHeightFront();
 
-    // vai para o canto direito da mesa
-    while(1) {
-        int rightDistance = usSensorRight.getDistance();
-        Tortuga.moveRight(70);
-        if (rightDistance < 10) {
-            Tortuga.stop();
-        }
-    }
-    
-    // começa a escanear as tags da direita para a esquerda e armazena os numeros em um array]
-    int tags_ids[8];
+    Tortuga.moveLeft(70);
+    Tortuga.moveBackward(100);
+    Tortuga.rotateAntiClockwise(562);
+    Tortuga.moveLeft(500);
+    Tortuga.moveForward(3500);
+    Tortuga.rotateAntiClockwise(562);
+    Tortuga.moveForward(1000);
 
-
-    // ordena o array
-    // volta para o canto direito e começa a procurar pela menor tag do array
-    // quando encontra o menor cubo do array, começa a procurar por ele
-    // se alinha e pega o cubo
-    // aumenta o contador
-    // vai para a parte de trás da mesa
-    // coloca o cubo na devida posição, de acordo com o contador
-    // se for o último, sai da arena e vai embora
-
-    start();
 }
