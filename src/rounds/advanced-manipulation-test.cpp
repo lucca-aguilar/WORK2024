@@ -14,19 +14,20 @@ int read_tag() {
     if (raspy.available() > 0) {
         String tag_string = raspy.readStringUntil('\n');
         tag = tag_string.toInt();
-        Serial.println("ID da AprilTag recebida: " + String(tag));
+        return tag;
     }
 }
 
 int find_tag(int tag_id) {
-    int detected_tag = read_tag();
+    int detected_tag = 0;
     while (detected_tag != tag_id) {
+        detected_tag = read_tag();
+        Serial.println("ID da tag recebida: " + String(detected_tag));
         int frontDistance = usSensorFront.getDistance();
-        int rightDistance = usSensorRight.getDistance();
         if (frontDistance <= 10) {
-            Tortuga.moveLeft(70);
+            Tortuga.moveLeft(10);
         } else {
-            Tortuga.moveRight(70);
+            Tortuga.moveRight(10);
         }
     }
     Tortuga.alignWithTag();
