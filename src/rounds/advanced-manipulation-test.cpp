@@ -38,18 +38,14 @@ int findDistance(int tags_counter) {
         distance = 700;
     }
     if (tags_counter == 2) {
-        distance = 600;
+        distance = 550;
     }
     if (tags_counter == 3) {
-        distance = 500;
+        distance = 400;
     }
     if (tags_counter == 4) {
-        distance = 400;
+        distance = 250;
     } if (tags_counter == 5) {
-        distance = 300;
-    } if (tags_counter == 6) {
-        distance = 200;
-    } if (tags_counter == 7) {
         distance = 100;
     }
 }
@@ -78,7 +74,7 @@ void advancedManipulationTest() {
     // checa a altura da mesa
     int table_height = Tortuga.checkTableHeightFront();
 
-    while(tags_counter <= 7) {
+    while(tags_counter <= 5) {
          // vai para o canto direito da mesa
         while(1) {
             int rightDistance = usSensorRight.getDistance();

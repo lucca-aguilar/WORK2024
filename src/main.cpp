@@ -31,10 +31,7 @@ void setup() {
 }
 
 void loop() {
-  Tortuga.defaultClawPosition();
-  int id = Tortuga.alignWithTag();
-  Serial.println("Cor:");
-  Serial.println(id);
+  advancedManipulationTest();
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
