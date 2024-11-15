@@ -250,7 +250,7 @@ int Robot::checkTableHeightFront() {
     3- move-se para a direita e realiza a leitura mais uma vez
     4- a altura e a media das tres alturas verificadas
     */
-    int irThreshold = 970;
+    int irThreshold = 950;
     int tableHeight[3], sensorsReadings[4];
 
     for (int counter = 0; counter < 3; counter++) {
@@ -504,7 +504,7 @@ int Robot::alignWithTag() {
 
     // Envia comando para a Raspberry Pi iniciar a detecção de tag
     char comando = 'L';
-    raspy.write(comando);
+    raspy.println(comando);
     delay(100);
 
     // Verifica se há uma resposta do ID da tag

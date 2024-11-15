@@ -1,6 +1,23 @@
 #include <advanced-manipulation-test.h>
 #include <Setup.h>
 
+int read_tag() {
+    // variável para armazenar o ID
+    int tag = -1;  // valor inicial
+
+    // envia comando para a Raspberry
+    char comando = 'A';
+    raspy.println(comando);
+    delay(100);
+
+    // verifica se há uma resposta do ID da tag
+    if (raspy.available() > 0) {
+        String tag_string = raspy.readStringUntil('\n');
+        tag = tag_string.toInt();
+        Serial.println("ID da AprilTag recebida: " + String(tag));
+    }
+}
+
 int find_tag(int tag_id) {
     int detected_tag = read_tag();
     while (detected_tag != tag_id) {
@@ -13,23 +30,6 @@ int find_tag(int tag_id) {
         }
     }
     Tortuga.alignWithTag();
-}
-
-int read_tag() {
-    // variável para armazenar o ID
-    int tag = -1;  // valor inicial
-
-    // envia comando para a Raspberry
-    char comando = 'A';
-    raspy.write(comando);
-    delay(100);
-
-    // verifica se há uma resposta do ID da tag
-    if (raspy.available() > 0) {
-        String tag_string = raspy.readStringUntil('\n');
-        tag = tag_string.toInt();
-        Serial.println("ID da AprilTag recebida: " + String(tag));
-    }
 }
 
 int findDistance(int tags_counter) {
@@ -51,8 +51,6 @@ int findDistance(int tags_counter) {
 }
 
 void advancedManipulationTest() {
-    start();
-
     // inicializa variáveis de contagem
     int tags_counter = 1;
 
@@ -79,8 +77,11 @@ void advancedManipulationTest() {
         while(1) {
             int rightDistance = usSensorRight.getDistance();
             Tortuga.moveRight(70);
+            Serial.print("USR =");
+            Serial.println(rightDistance);
             if (rightDistance < 10) {
                 Tortuga.stop();
+                break;
             }
         }
 

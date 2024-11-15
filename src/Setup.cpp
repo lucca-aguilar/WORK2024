@@ -63,7 +63,7 @@
 void start() {
     // configuracoes
     Serial.begin(9600);
-    raspy.begin(15200);
+    raspy.begin(152000);
     Tortuga.servoConfiguration();
     Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
     Tortuga.serialConfiguration();
