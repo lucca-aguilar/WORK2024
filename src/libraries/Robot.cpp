@@ -468,7 +468,7 @@ int Robot::readTag() {
     int detected_tag = 0;
     Serial.write('A'); 
     String detected_tag_string = Serial.readStringUntil('\n');
-    detected_tag =detected_tag_string.toInt();
+    detected_tag = detected_tag_string.toInt();
     return detected_tag;
 };
 

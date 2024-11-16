@@ -29,7 +29,15 @@ void setup() {
 }
 
 void loop() {
-    advancedTransportationTestII();
+  Serial.write("Oi, Raspberry!");
+  if (Serial.available() > 0) {
+    String message = Serial.readStringUntil('\n');
+    if (message == "Oi, Arduino!") {
+      rgbLED.blue();
+      delay(1000);
+      rgbLED.off();
+    }
+  }
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

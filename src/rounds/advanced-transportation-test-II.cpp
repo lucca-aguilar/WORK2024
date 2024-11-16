@@ -195,7 +195,15 @@ void advancedTransportationTestII() {
         }
 
         // verifica a altura da mesa e pega o cubo 
-        int table_height = Tortuga.checkTableHeightFront();    
+        int table_height = Tortuga.checkTableHeightFront();   
+        while(1) {
+            Tortuga.moveRight(150);
+            int right_distance = usSensorRight.getDistance();
+            if (right_distance <= 10){
+                break;
+            }
+        }
+
         Tortuga.alignWithTag(red_cube_lowest1);
         Tortuga.getCubeFront(table_height);
 
