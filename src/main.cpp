@@ -29,14 +29,12 @@ void setup() {
 }
 
 void loop() {
-
-    Tortuga.moveClawDown(10);
-
-    if (raspy.available() > 0) {
-      String message = raspy.readStringUntil('\n');
-      Serial.println(message);
+    Tortuga.defaultClawPosition();
+    while (usSensorRight.getDistance() > 10) {
+      Tortuga.moveRight(50);
     }
-    raspy.write("Oi, Raspyberry!\n");
+    Tortuga.alignWithTag(6);
+    Tortuga.getCubeFront(10);
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

@@ -56,22 +56,19 @@ void Robot::getCubeFront(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveRight(100);
-        moveClawDown(36);
+        moveClawDown(38);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveRight(100);
-        moveClawDown(31);
+        moveClawDown(33);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveRight(100);
-        moveClawDown(26);
+        moveClawDown(28);
         moveForward(270);
     }
 
@@ -205,7 +202,6 @@ void Robot::moveClawUp(int dc_dislocation) {
 void Robot::moveClawDown(int dc_dislocation) {
     int dc_time = 0;
     dc_time = ((dc_dislocation + 7 - 1.5375) / 4.5) * 1000;
-    Serial.println(dc_time);
     clawMotor.moveBackward(255);
     delay(dc_time);
     clawMotor.stop();
@@ -265,12 +261,6 @@ int Robot::checkTableHeightFront() {
         sensorsReadings[2] = irSensorTableHeight3.measureDistance();
         sensorsReadings[3] = irSensorTableHeight4.measureDistance();
 
-        Serial.println(irSensorTableHeight1.measureDistance());
-        Serial.println(irSensorTableHeight2.measureDistance());
-        Serial.println(irSensorTableHeight3.measureDistance());
-        Serial.println(irSensorTableHeight4.measureDistance());
-        Serial.println(".");
-
         if (sensorsReadings[3] < irThreshold && sensorsReadings[2] > irThreshold && sensorsReadings[1] > irThreshold && sensorsReadings[0] > irThreshold) {
             tableHeight[counter] = 5;
         }
@@ -296,8 +286,6 @@ int Robot::checkTableHeightFront() {
             smallerTableHeight = tableHeight[i];
         }
     }
-    Serial.println("Table height:");
-    Serial.println(smallerTableHeight);
     return smallerTableHeight;
 };
 
@@ -308,10 +296,6 @@ int Robot::checkForCubeFront(int tableHeight, int ir1) {
     3- quando a leitura desse sensor e satisfatoria, para em frente ao cubo
     */
     int irThreshold = ir1 - (0.05 * ir1);
-    Serial.println("IR:");
-    Serial.println(ir1);
-    Serial.println("Limite:");
-    Serial.println(irThreshold);
     int cubeFound = 0;
     
     while(1){
@@ -429,15 +413,10 @@ char Robot::checkCubeColor() {
     int green_value = clawSensor.colorRead('g', 100);
     int blue_value = clawSensor.colorRead('b', 100);
     delay(1000);
-    Serial.println(red_value);
-    Serial.println(green_value);
-    Serial.println(blue_value);
 
     if (red_value > 1.3*green_value) {
-        Serial.println("Vermelho detectado\n");
         return 'R';
     } else {
-        Serial.println("Azul detectado\n");
         return 'B';
     }
 };
@@ -447,15 +426,10 @@ char Robot::checkFloorColor() {
     int green_value = RightFloorSensor.colorRead('g', 100);
     int blue_value = RightFloorSensor.colorRead('b', 100);
     delay(1000);
-    Serial.println(red_value);
-    Serial.println(green_value);
-    Serial.println(blue_value);
 
     if (blue_value > 2*red_value) {
-        Serial.println("Azul detectado\n");
         return 'B';
     } else {
-        Serial.println("Branco detectado\n");
         return 'W';
     }
 };
@@ -463,17 +437,17 @@ char Robot::checkFloorColor() {
 // metodos envolvendo visao
 int Robot::checkVirtualWall() {
     // envia comando para a raspy
-    Serial.println("Checar parede virtual");
+    Serial.println('W');
 
     if (Serial.available() > 0) {
-        String command = Serial.readString(); // le mensagem recebida
+        char command = Serial.read(); // le mensagem recebida
         delay(100);
 
-        if (command == "Parede virtual detectada") {
+        if (command == 'Y') {
             return true;
         }
 
-        if (command == "Parede virtual nao detectada") {
+        if (command == 'N') {
             return false;
         }
     } 
@@ -481,7 +455,7 @@ int Robot::checkVirtualWall() {
 
 int Robot::virtualWallDistance() {
     // envia comando para a raspy
-    Serial.write('W');
+    Serial.write('D');
     delay(100);
 
     if (Serial.available() > 0) {
@@ -490,95 +464,41 @@ int Robot::virtualWallDistance() {
     }
 };
 
-int Robot::alignWithTag() {
-    // Variável para armazenar o ID da tag
-    int tag = -1;  // Valor inicial para indicar "não encontrado"
-
-    // Envia comando para a Raspberry Pi iniciar a detecção de tag
-    Serial.write('L');
-    delay(100);
-
-    // Verifica se há uma resposta do ID da tag
-    if (Serial.available() > 0) {
-        String tag_string = Serial.readStringUntil('\n');
-        tag = tag_string.toInt();
-    }
-
-    // Se uma tag foi encontrada, ajustar para alinhamento
-    if (tag > 0) {  // Verifica se o ID da tag é válido
-        char command = ' ';
-
-        while (command != 'S') {
-            if (Serial.available() > 0) {
-                command = Serial.read();  // Recebe o comando
-
-                // Interpreta o comando para alinhar com a tag
-                if (command == 'R') {
-                    moveRight(50);
-                } else if (command == 'L') {
-                    moveLeft(50);
-                } else if (command == 'S') {
-                    stop();
-                }
-            }
-        }
-    }
-    return tag;
-}
-
-char Robot::checkConteinerColor() {
-    // Envia o comando para a Raspberry Pi
-    char comando = 'C';
-    Serial.write(comando);
-    delay(100);  // Espera um pouco para que a Raspberry Pi processe e envie a resposta
-
-    // Verifica se há dados disponíveis na comunicação serial
-    if (Serial.available() > 0) {
-        char color = Serial.read();  // Lê o primeiro caractere recebido
-
-        // Ignora quaisquer caracteres extras no buffer
-        while (Serial.available() > 0) {
-            Serial.read();
-        }
-
-        // Verifica se o caractere lido é 'R' ou 'B'
-        if (color == 'R') {
-            return 'R';
-        } else if (color == 'B') {
-            return 'B';
-        } else {
-            return 'N';  // 'N' para indicar uma resposta inválida
-        }
-    } else {
-        return 'N';  // 'N' para indicar ausência de resposta
-    }
+int Robot::readTag() {
+    int detected_tag = 0;
+    Serial.write('A'); 
+    String detected_tag_string = Serial.readStringUntil('\n');
+    detected_tag =detected_tag_string.toInt();
+    return detected_tag;
 };
 
-int Robot::checkForCubeVision() {
-    // Etapa 1: Mover para a direita até detectar uma parede
+void Robot::findTag(int key_tag) {
+    int detected_tag = 0;
     while (1) {
-        int rightDistance = usSensorRight.getDistance();
-        moveRight(70);
-
-        if (rightDistance <= 10) {  // Para ao detectar a parede à direita
+        moveLeft(30);
+        detected_tag = readTag();
+        if (detected_tag == key_tag) {
+            Serial.write('S');
             stop();
             break;
         }
     }
+};
 
-    // Etapa 2: Busca do cubo com AprilTag movendo para a esquerda
-    while (1) {
-        int frontDistance = usSensorFront.getDistance();
-        int id_tag = alignWithTag();  // Alinha com a tag mais próxima
+int Robot::alignWithTag(int key_tag) {
+    // Encontra a tag
+    findTag(key_tag);
 
-        if (id_tag == -1) {  // Se não encontrar tag 
-            moveLeft(70);  // Move para a esquerda para buscar novamente
-        } else if (frontDistance > 15) {  // Se a distância da frente é segura
-            stop();
-        } else {
-            moveLeft(70);  // Ajuste fino para a esquerda e parada
-            stop();
-            return id_tag;  // Retorna o ID da tag detectada
-        }
-    }
-}
+    rgbLED.blue();
+    delay(500);
+    rgbLED.off();
+    delay(500);
+    rgbLED.blue();
+    delay(500);
+    rgbLED.off();
+    delay(500);
+
+    // Se uma tag foi encontrada, ajustar para alinhamento
+    moveLeft(70);
+};
+

@@ -31,7 +31,6 @@ void basicTransportationTestII() {
         int table_height = Tortuga.checkTableHeightFront();
 
         // encontra o cubo, armazena a tag e se alinha com ele 
-        cube_id = Tortuga.checkForCubeVision();
     }
 
     // ir até a mesa

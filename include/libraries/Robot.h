@@ -79,9 +79,11 @@ public:
     // metodos envolvendo visao
     int checkVirtualWall();
     int virtualWallDistance();
-    int alignWithTag();
     char checkConteinerColor(); 
-    int checkForCubeVision();
+    int readTag();
+    void findTag(int key_tag);
+    int alignWithTag(int key_tag);
+
 };
 
 #endif
