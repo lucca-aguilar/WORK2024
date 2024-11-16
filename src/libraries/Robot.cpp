@@ -466,6 +466,10 @@ int Robot::virtualWallDistance() {
 
 int Robot::readTag() {
     int detected_tag = 0;
+    while (Serial.available() < 1) {
+        char flush = Serial.read();
+    }
+    Serial.clearWriteError();
     Serial.write('A'); 
     String detected_tag_string = Serial.readStringUntil('\n');
     detected_tag = detected_tag_string.toInt();
