@@ -7,7 +7,6 @@
 #include <MotorDC.h>
 #include <Robot.h>
 #include <Servo.h>
-#include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
 #define true 0
 #define false 1
@@ -19,7 +18,7 @@
 
 // metodos de configuraçao
 void Robot::serialConfiguration() {
-    raspy.begin(115200);
+    Serial.begin(9600);
 };
 
 void Robot::servoConfiguration() {
@@ -464,38 +463,30 @@ char Robot::checkFloorColor() {
 // metodos envolvendo visao
 int Robot::checkVirtualWall() {
     // envia comando para a raspy
-    raspy.println("Checar parede virtual");
+    Serial.println("Checar parede virtual");
 
-    if (raspy.available() > 0) {
-        String command = raspy.readString(); // le mensagem recebida
+    if (Serial.available() > 0) {
+        String command = Serial.readString(); // le mensagem recebida
         delay(100);
 
         if (command == "Parede virtual detectada") {
             return true;
-            // para debugar
-            Serial.println("Fita detectada.");
         }
 
         if (command == "Parede virtual nao detectada") {
             return false;
-            // para debugar
-            Serial.println("Fita nao detectada");
         }
-    } else {
-        Serial.println("Raspy nao enviou nada");
-    }
+    } 
 };
 
 int Robot::virtualWallDistance() {
     // envia comando para a raspy
-    raspy.println("Checar distancia da parede virtual");
+    Serial.write('W');
     delay(100);
 
-    if (raspy.available() > 0) {
-        int virtual_wall_distance = raspy.parseInt(); // le mensagem recebida
+    if (Serial.available() > 0) {
+        int virtual_wall_distance = Serial.parseInt(); // le mensagem recebida
         return virtual_wall_distance;
-    } else {
-        Serial.println("Raspy nao enviou nada");
     }
 };
 
@@ -504,14 +495,13 @@ int Robot::alignWithTag() {
     int tag = -1;  // Valor inicial para indicar "não encontrado"
 
     // Envia comando para a Raspberry Pi iniciar a detecção de tag
-    raspy.write('L');
+    Serial.write('L');
     delay(100);
 
     // Verifica se há uma resposta do ID da tag
-    if (raspy.available() > 0) {
-        String tag_string = raspy.readStringUntil('\n');
+    if (Serial.available() > 0) {
+        String tag_string = Serial.readStringUntil('\n');
         tag = tag_string.toInt();
-        Serial.println("ID da tag recebida: " + String(tag));
     }
 
     // Se uma tag foi encontrada, ajustar para alinhamento
@@ -519,18 +509,15 @@ int Robot::alignWithTag() {
         char command = ' ';
 
         while (command != 'S') {
-            if (raspy.available() > 0) {
-                command = raspy.read();  // Recebe o comando
+            if (Serial.available() > 0) {
+                command = Serial.read();  // Recebe o comando
 
                 // Interpreta o comando para alinhar com a tag
                 if (command == 'R') {
-                    Serial.println("Movendo para a direita");
                     moveRight(50);
                 } else if (command == 'L') {
-                    Serial.println("Movendo para a esquerda");
                     moveLeft(50);
                 } else if (command == 'S') {
-                    Serial.println("Tag alinhada");
                     stop();
                 }
             }
@@ -542,31 +529,27 @@ int Robot::alignWithTag() {
 char Robot::checkConteinerColor() {
     // Envia o comando para a Raspberry Pi
     char comando = 'C';
-    raspy.write(comando);
+    Serial.write(comando);
     delay(100);  // Espera um pouco para que a Raspberry Pi processe e envie a resposta
 
     // Verifica se há dados disponíveis na comunicação serial
-    if (raspy.available() > 0) {
-        char color = raspy.read();  // Lê o primeiro caractere recebido
+    if (Serial.available() > 0) {
+        char color = Serial.read();  // Lê o primeiro caractere recebido
 
         // Ignora quaisquer caracteres extras no buffer
-        while (raspy.available() > 0) {
-            raspy.read();
+        while (Serial.available() > 0) {
+            Serial.read();
         }
 
         // Verifica se o caractere lido é 'R' ou 'B'
         if (color == 'R') {
-            Serial.println("Vermelho");  // Debug
             return 'R';
         } else if (color == 'B') {
-            Serial.println("Azul");  // Debug
             return 'B';
         } else {
-            Serial.println("Caractere desconhecido recebido");  // Debug para caractere inválido
             return 'N';  // 'N' para indicar uma resposta inválida
         }
     } else {
-        Serial.println("Raspy não enviou nada");  // Debug para ausência de resposta
         return 'N';  // 'N' para indicar ausência de resposta
     }
 };

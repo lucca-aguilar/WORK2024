@@ -25,20 +25,24 @@
 #include <finals.h>
 
 void setup() {
-  Serial.println("Entrou na setup");
   start();
-  Serial.println("Deu start");
 }
 
 void loop() {
+ // Enviar mensagem pela porta serial
+  raspy.println("Oi, Arduíno");
 
-    Tortuga.moveClawDown(10);
+  // Verificar se há dados disponíveis para leitura no "raspy"
+  if (raspy.available() > 0) {
+    // Lê a mensagem recebida
+    String command = raspy.readStringUntil('\n');
+    
+    // Mostra o comando no monitor serial
+    Serial.print("Mensagem recebida: ");
+    Serial.println(command);
+  }
 
-    if (raspy.available() > 0) {
-      String message = raspy.readStringUntil('\n');
-      Serial.println(message);
-    }
-    raspy.write("Oi, Raspyberry!\n");
+  delay(1000); // Atraso para evitar muitas mensagens rápidas
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  

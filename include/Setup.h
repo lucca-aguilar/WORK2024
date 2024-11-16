@@ -13,7 +13,6 @@
 #include <MotorDC.h>
 #include <Robot.h>
 #include <Servo.h>
-#include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
 
 // Define os objetos como globais
@@ -34,7 +33,6 @@ extern ColorSensor LeftFloorSensor;
 extern ColorSensor RightFloorSensor;
 extern Servo clawServo;
 extern LED rgbLED;
-extern SoftwareSerial raspy;
 extern Bumper clawBumper;
 extern MotorDC clawMotor;
 extern Robot Tortuga;

@@ -8,7 +8,6 @@
 #include <Robot.h>
 #include <Servo.h>
 #include <Setup.h>
-#include <SoftwareSerial.h>
 #include <UltrasonicSensor.h>
 #define stepper_motors_velocity 800
 #define stepper_motors_acceleration 600
@@ -48,9 +47,6 @@
     // leds
     LED rgbLED(24, 22);
 
-    // raspberry
-    SoftwareSerial raspy(10, 11);
-
     // bumper
     Bumper clawBumper(22);
 
@@ -58,12 +54,10 @@
     MotorDC clawMotor(21, 20, 5, 0, 0);
 
     // robot
-    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, usSensorTable, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, LeftFloorSensor, RightFloorSensor, rgbLED, raspy, clawBumper, clawMotor);
+    Robot Tortuga(motor1, motor2, motor3, motor4, usSensorFront, usSensorRight, usSensorLeft, usSensorTable, irSensorTableHeight1, irSensorTableHeight2, irSensorTableHeight3, irSensorTableHeight4, clawServo, clawSensor, LeftFloorSensor, RightFloorSensor, rgbLED, clawBumper, clawMotor);
 
 void start() {
     // configuracoes
-    Serial.begin(9600);
-    raspy.begin(9600);
     Tortuga.servoConfiguration();
     Tortuga.motorsConfiguration(stepper_motors_velocity, stepper_motors_acceleration);
     Tortuga.serialConfiguration();
