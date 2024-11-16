@@ -56,19 +56,19 @@ void Robot::getCubeFront(int table_height) {
 
     if (table_height == 5) {
         moveBackward(300);
-        moveClawDown(38);
+        moveClawDown(40);
         moveForward(270);
     }
 
     if (table_height == 10) {
         moveBackward(300);
-        moveClawDown(33);
+        moveClawDown(35);
         moveForward(270);
     }
 
     if (table_height == 15) {
         moveBackward(300);
-        moveClawDown(28);
+        moveClawDown(30);
         moveForward(270);
     }
 
@@ -501,4 +501,5 @@ int Robot::alignWithTag(int key_tag) {
     // Se uma tag foi encontrada, ajustar para alinhamento
     moveLeft(70);
 };
+
 

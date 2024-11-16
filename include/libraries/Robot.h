@@ -83,6 +83,7 @@ public:
     int readTag();
     void findTag(int key_tag);
     int alignWithTag(int key_tag);
+    int scanForTag(int id);
 
 };
 

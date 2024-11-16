@@ -29,12 +29,7 @@ void setup() {
 }
 
 void loop() {
-    Tortuga.defaultClawPosition();
-    while (usSensorRight.getDistance() > 10) {
-      Tortuga.moveRight(50);
-    }
-    Tortuga.alignWithTag(6);
-    Tortuga.getCubeFront(10);
+    advancedTransportationTestII();
 }
  
   // funcoes para cada rodada, vai ficar comentado por enquanto  
