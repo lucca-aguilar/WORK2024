@@ -75,7 +75,15 @@ void levarAoContainer(){
                 }
             }
             int conteiner_table_height = Tortuga.checkTableHeightFront();
-            Tortuga.placeCube(conteiner_table_height);
+            while(1){
+              Tortuga.moveLeft(70);
+              int leftDistance = usSensorLeft.getDistance();
+              if(leftDistance < 10){
+                Tortuga.moveRight(220);
+                break;
+              }  
+            }
+            Tortuga.placeCube(conteiner_table_height+5);
             
             Tortuga.moveBackward(1200);
             Tortuga.moveRight(1800);
